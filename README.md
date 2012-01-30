@@ -1,4 +1,4 @@
-# AzuCat
+# Azucat
 
 ## About
 標準入力をブラウザに出力します。
