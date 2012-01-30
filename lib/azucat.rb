@@ -1,17 +1,26 @@
 require "socket"
-require "rubygems"
-require "bundler"
-Bundler.require
 
-require "webtail/ext"
-require "webtail/http_server"
-require "webtail/http_app"
-require "webtail/websocket_server"
-require "webtail/output"
+gemfile = File.expand_path('../../Gemfile', __FILE__)
+begin
+  ENV["BUNDLE_GEMFILE"] = gemfile
+  require "rubygems"
+  require "bundler"
+  Bundler.require
+rescue Bundler::GemNotFound => e
+  STDERR.puts e.message
+  STDERR.puts "Try running `bundle install`."
+  exit!
+end if File.exist?(gemfile)
+
+require "azucat/ext"
+require "azucat/http_server"
+require "azucat/http_app"
+require "azucat/websocket_server"
+require "azucat/output"
 
 Thread.abort_on_exception = true
 
-module WebTail
+module Azucat
   extend self
 
   def start(opts = {})
@@ -30,12 +39,12 @@ module WebTail
     end
 
     EM.run do
-      EM.defer { WebTail::Output.run(channel) }
-      EM.defer { WebTail::WebSocketServer.run(
+      EM.defer { Azucat::Output.run(channel) }
+      EM.defer { Azucat::WebSocketServer.run(
         :channel => channel,
         :logs    => logs,
         :port    => opts[:ws_port]) }
-      EM.defer { WebTail::HTTPServer.run(
+      EM.defer { Azucat::HTTPServer.run(
         :ws_port   => opts[:ws_port],
         :http_port => opts[:http_port]) }
 

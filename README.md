@@ -1,4 +1,4 @@
-# WebTail
+# AzuCat
 
 ## About
 標準入力をブラウザに出力します。
@@ -10,4 +10,4 @@ Ruby 1.8.7以上で動作確認済みです。
     $ bundler
 
 ## Example
-    $ tail -f foo.log | ./bin/webtail
+    $ tail -f foo.log | ./bin/azucat

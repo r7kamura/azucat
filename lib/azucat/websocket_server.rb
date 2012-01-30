@@ -1,4 +1,4 @@
-module WebTail
+module Azucat
   class WebSocketServer
     def self.run(args)
       channel = args[:channel]

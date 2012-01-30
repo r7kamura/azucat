@@ -1,11 +1,11 @@
 #!/usr/bin/env ruby
 
 $LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
-require "webtail"
+require "azucat"
 
-WebTail.start
+Azucat.start
 # example:
-#   WebTail.start(
+#   Azucat.start(
 #     :ws_port      => 3001, # default is unused port
 #     :http_port    => 3000, # default is unused port
 #     :log_size     => 1000, # default is 100

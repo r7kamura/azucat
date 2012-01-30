@@ -1,4 +1,4 @@
-module WebTail
+module Azucat
   class Output
     def self.run(channel)
       color_map = {}.tap { |map|

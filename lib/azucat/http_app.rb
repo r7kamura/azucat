@@ -1,4 +1,4 @@
-module WebTail
+module Azucat
   class HTTPApp < Sinatra::Base
     set :root, File.expand_path("../../../", __FILE__)
 
