@@ -6,6 +6,7 @@ require "webtail"
 WebTail.start
 # example:
 #   WebTail.start(
+#     :ws_port      => 3001, # default is unused port
 #     :http_port    => 3000, # default is unused port
 #     :log_size     => 1000, # default is 100
 #     :open_browser => false # default is true

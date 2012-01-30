@@ -1,0 +1,28 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>WebTail</title>
+  <link rel="stylesheet" href="/css/style.css" />
+  <script type="text/javascript" src="/js/jquery.min.js"></script>
+  <script type="text/javascript">
+    $(function() {
+      var ws = new WebSocket("ws://localhost:<%= @ws_port %>");
+      ws.onmessage = function(e) {
+        $(document.body).append("<pre>" + e.data + "</pre>");
+        document.title = e.data;
+        window.scrollTo(0, document.body.scrollHeight);
+        console.log(e.data);
+      };
+    });
+  </script>
+</head>
+<body>
+  <!--
+    <p> log 1 </p>
+    <p> log 2 </p>
+    <p> log 3 </p>
+        ...
+  -->
+</body>
+</html>

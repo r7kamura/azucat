@@ -3,8 +3,9 @@ module WebTail
     def self.run(args)
       channel = args[:channel]
       logs    = args[:logs]
+      port    = args[:port]
 
-      EM::WebSocket.start(:host => "127.0.0.1", :port => 4000) do |ws|
+      EM::WebSocket.start(:host => "127.0.0.1", :port => port) do |ws|
         ws.onopen {
           send_msg = proc { |msg| ws.send(msg.encode("UTF-8")) }
           sid = channel.subscribe(&send_msg)

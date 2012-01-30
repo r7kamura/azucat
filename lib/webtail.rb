@@ -5,6 +5,7 @@ Bundler.require
 
 require "webtail/ext"
 require "webtail/http_server"
+require "webtail/http_app"
 require "webtail/websocket_server"
 require "webtail/output"
 
@@ -16,6 +17,7 @@ module WebTail
   def start(opts = {})
     opts = {
       :log_size     => 100,
+      :ws_port      => unused_port,
       :http_port    => unused_port,
       :open_browser => true
     }.merge(opts)
@@ -29,12 +31,18 @@ module WebTail
 
     EM.run do
       EM.defer { WebTail::Output.run(channel) }
-      EM.defer { WebTail::WebSocketServer.run(:channel => channel, :logs => logs) }
-      EM.defer { WebTail::HTTPServer.run(:port => opts[:http_port]) }
+      EM.defer { WebTail::WebSocketServer.run(
+        :channel => channel,
+        :logs    => logs,
+        :port    => opts[:ws_port]) }
+      EM.defer { WebTail::HTTPServer.run(
+        :ws_port   => opts[:ws_port],
+        :http_port => opts[:http_port]) }
 
       if opts[:open_browser]
         EM.defer {
-          sleep 1; ::Launchy.open("http://localhost:#{opts[:http_port]}")
+          sleep 1
+          ::Launchy.open("http://localhost:#{opts[:http_port]}")
         }
       end
     end

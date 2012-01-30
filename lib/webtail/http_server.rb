@@ -1,12 +1,14 @@
 module WebTail
   class HTTPServer
     def self.run(args)
-      port = args[:port]
+      ws_port   = args[:ws_port]
+      http_port = args[:http_port]
 
-      html = File.read(File.expand_path("../../../views/index.html", __FILE__))
+      WebTail::HTTPApp.set :ws_port, ws_port
+
       ::Rack::Handler::WEBrick.run(
-        proc { [200, {"Content-Type" => "text/html; charset=UTF-8"}, html] },
-        :Port      => port,
+        WebTail::HTTPApp.new,
+        :Port      => http_port,
         :AccessLog => [nil, nil],
         :Logger    => ::WEBrick::Log.new("/dev/null")
       )
