@@ -1,11 +1,18 @@
 module Azucat
   class WebSocketServer
     def self.run(args)
-      channel = args[:channel]
-      logs    = args[:logs]
-      port    = args[:port]
+      channel  = args[:channel]
+      port     = args[:ws_port]
+      host     = args[:ws_host]
+      log_size = args[:log_size]
 
-      EM::WebSocket.start(:host => "127.0.0.1", :port => port) do |ws|
+      logs = []
+      channel.subscribe do |msg|
+        logs << msg
+        logs.shift if logs.size > log_size
+      end
+
+      EM::WebSocket.start(:host => host, :port => port) do |ws|
         ws.onopen {
           send_msg = proc { |msg| ws.send(msg.encode("UTF-8")) }
           sid = channel.subscribe(&send_msg)

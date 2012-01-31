@@ -1,24 +1,22 @@
 require "socket"
 
-gemfile = File.expand_path('../../Gemfile', __FILE__)
 begin
-  ENV["BUNDLE_GEMFILE"] = gemfile
+  ENV["BUNDLE_GEMFILE"] = File.expand_path('../../Gemfile', __FILE__)
   require "rubygems"
   require "bundler"
   Bundler.require
 rescue Bundler::GemNotFound => e
   STDERR.puts e.message
-  STDERR.puts "Try running `bundle install`."
+  STDERR.puts "Try running `bundle install`"
   exit!
-end if File.exist?(gemfile)
+end
 
 require "azucat/ext"
 require "azucat/http_server"
 require "azucat/http_app"
 require "azucat/websocket_server"
 require "azucat/output"
-
-Thread.abort_on_exception = true
+require "azucat/browser"
 
 module Azucat
   extend self
@@ -27,33 +25,19 @@ module Azucat
     opts = {
       :log_size     => 100,
       :ws_port      => unused_port,
+      :ws_host      => "localhost",
       :http_port    => unused_port,
-      :open_browser => true
+      :http_host    => "localhost",
+      :open_browser => true,
+      :channel      => EM::Channel.new
     }.merge(opts)
 
-    logs = []
-    channel = EM::Channel.new
-    channel.subscribe do |msg|
-      logs << msg
-      logs.shift if logs.size > opts[:log_size]
-    end
-
+    Thread.abort_on_exception = true
     EM.run do
-      EM.defer { Azucat::Output.run(channel) }
-      EM.defer { Azucat::WebSocketServer.run(
-        :channel => channel,
-        :logs    => logs,
-        :port    => opts[:ws_port]) }
-      EM.defer { Azucat::HTTPServer.run(
-        :ws_port   => opts[:ws_port],
-        :http_port => opts[:http_port]) }
-
-      if opts[:open_browser]
-        EM.defer {
-          sleep 1
-          ::Launchy.open("http://localhost:#{opts[:http_port]}")
-        }
-      end
+      EM.defer { HTTPServer.run(opts)      }
+      EM.defer { WebSocketServer.run(opts) }
+      EM.defer { Output.run(opts)          }
+      EM.defer { Browser.open(opts)        }
     end
   end
 

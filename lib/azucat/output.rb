@@ -1,6 +1,8 @@
 module Azucat
   class Output
-    def self.run(channel)
+    def self.run(args)
+      channel = args[:channel]
+
       color_map = {}.tap { |map|
         Term::ANSIColor::ATTRIBUTES.each do |color, code|
           map[code.to_s] = color.to_s.gsub("_", "-")
