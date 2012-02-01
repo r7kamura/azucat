@@ -12,18 +12,18 @@ module Azucat
           :access_secret => nil,
           :proxy         => ENV["http_proxy"]
         }.merge(get_access_token(
-          :consumer_key    => "RmzuwQ5g0SYObMfebIKJag",
-          :consumer_secret => "V98dYYmWm9JoG7qfOF0jhJaVEVW3QhGYcDJ9JQSXU"
+          :consumer_key    => "B2tZeyZ96bB7BdQuk6r0A",
+          :consumer_secret => "iA5pDiQpNaAjFw6FwWSwDUVFppU4dHVxicprAcPRak"
         ))
       }
 
       stream = ::Twitter::JSONStream.connect(options)
-      stream.each_item { |item| Output.puts convert_to_str(item), :channel => ch }
-      stream.on_error { |msg|  Output.puts "Error: #{msg}", :channel => ch }
-      stream.on_reconnect { Output.puts "Reconnect", :channel => ch }
-      stream.on_max_reconnects { Output.puts "Failed", :channel => ch }
+      stream.each_item         { |item| Output.puts convert_to_str(item) }
+      stream.on_error          { |msg|  Output.puts "Error: #{msg}"      }
+      stream.on_reconnect      {        Output.puts "Reconnect"          }
+      stream.on_max_reconnects {        Output.puts "Failed"             }
     rescue EventMachine::ConnectionError => e
-      Output.puts("[ERROR] (#{self}) #{e.message}", :channel => ch)
+      Output.puts("[ERROR] (#{self}) #{e.message}")
     end
 
     private

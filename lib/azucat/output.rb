@@ -6,9 +6,16 @@ module Azucat
       end
     }
 
-    def self.puts(obj, opts)
+    # define class instance variable and it's accessor
+    # example:
+    #   Output.channel
+    #   Output.channel= EM::Channel.new
+    @channel = nil
+    class << self; attr_accessor :channel; end
+
+    def self.puts(obj)
       STDOUT.puts obj
-      opts[:channel] << colorize(obj.to_s)
+      channel << colorize(obj.to_s)
     end
 
     private

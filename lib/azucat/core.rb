@@ -11,6 +11,7 @@ module Azucat
         :channel      => EM::Channel.new
       }.merge(opts)
 
+      Output.channel = opts[:channel]
       Thread.abort_on_exception = true
       EM.run do
         EM.defer { HTTPServer.run(opts)      }
