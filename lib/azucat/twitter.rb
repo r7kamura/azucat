@@ -1,8 +1,6 @@
 module Azucat
   class Twitter
     def self.run(args)
-      ch = args[:channel]
-
       options = {
         :host  => 'userstream.twitter.com',
         :path  => '/2/user.json',
@@ -50,7 +48,8 @@ module Azucat
     def self.convert_to_str(tweet_json)
       hash = JSON.parse(tweet_json)
       return "" unless hash["user"]
-      "%14s: %s" % [hash["user"]["screen_name"], hash["text"]]
+      user = "%14s" % hash["user"]["screen_name"]
+      "%s: %s" % [Output.random_colorize(user), hash["text"]]
     end
   end
 end
