@@ -13,17 +13,21 @@ module Azucat
       end
 
       EM::WebSocket.start(:host => host, :port => port) do |ws|
-        ws.onopen {
-          send_msg = proc { |msg| ws.send(msg.encode("UTF-8")) }
+        ws.onopen do
+          send_msg = proc { |msg| ws.send(msg) }
           sid = channel.subscribe(&send_msg)
           logs.each(&send_msg)
           ws.onclose { channel.unsubscribe(sid) }
-        }
-        ws.onmessage { |msg| channel << msg }
-        ws.onerror { |e|
+        end
+
+        ws.onmessage do |msg|
+          channel << msg
+        end
+
+        ws.onerror do |e|
           puts "#{Time.now} [SERVER] #{e.message}"
           puts e.backtrace.join("\n")
-        }
+        end
       end
     end
   end

@@ -15,8 +15,9 @@ module Azucat
       EM.run do
         EM.defer { HTTPServer.run(opts)      }
         EM.defer { WebSocketServer.run(opts) }
-        EM.defer { Output.run(opts)          }
+        EM.defer { Input.run(opts)           }
         EM.defer { Browser.open(opts)        }
+        EM.defer { Twitter.run(opts)         }
       end
     end
 
