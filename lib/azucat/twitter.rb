@@ -1,11 +1,8 @@
 module Azucat
   class Twitter
     def self.run(args)
-<<<<<<< HEAD
       return unless args[:twitter]
 
-=======
->>>>>>> master
       options = {
         :host  => 'userstream.twitter.com',
         :path  => '/2/user.json',
