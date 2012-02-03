@@ -11,7 +11,6 @@ module Azucat
     # example:
     #   Output.channel
     #   Output.channel= EM::Channel.new
-    @channel = nil
     class << self; attr_accessor :channel; end
 
     def self.puts(obj)
