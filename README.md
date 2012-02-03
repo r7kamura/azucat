@@ -6,16 +6,16 @@
 
 標準入力を渡す例
 
-  $ tail -f foo.log | ./bin/azucat
+    $ tail -f foo.log | ./bin/azucat
 
 twitterやIRCに接続する例
 
-  $ ./bin/azucat
+    $ ./bin/azucat
 
 
 ## Install
-  $ gem install bundler
-  $ bundler
+    $ gem install bundler
+    $ bundler
 
 ## ScreenShot
 ![azucat](http://dl.dropbox.com/u/5978869/image/20120204_000517.png)
