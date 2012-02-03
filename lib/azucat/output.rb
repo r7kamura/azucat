@@ -18,6 +18,8 @@ module Azucat
       return if obj.blank?
 
       str = obj.to_s
+      str.gsub!("\n", "")
+
       STDOUT.puts str
       channel << htmlize(str)
     end

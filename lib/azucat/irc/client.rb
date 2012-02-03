@@ -18,13 +18,13 @@ module Azucat::IRC
     end
 
     %w[
-      ADMIN   KICK    MOTD    QUIT     VERSION
-      AWAY    KNOCK   NAMES   RULES    VHOST
-      CREDITS LICENSE NICK    SETNAME  WATCH
-      CYCLE   LINKS   NOTICE  SILENCE  WHO
-      DALINFO LIST    PART    STATS    WHOIS
-      INVITE  LUSERS  PING    TIME     WHOWAS
-      ISON    MAP     PONG    TOPIC    PASS
+      ADMIN   KICK    MOTD     QUIT    VERSION
+      AWAY    KNOCK   NAMES    RULES   VHOST
+      CREDITS LICENSE NICK     SETNAME WATCH
+      CYCLE   LINKS   NOTICE   SILENCE WHO
+      DALINFO LIST    PART     STATS   WHOIS
+      INVITE  LUSERS  PING     TIME    WHOWAS
+      ISON    MAP     TOPIC    PASS
       JOIN    MODE    USERHOST USER
     ].each do |name|
       define_method(name.downcase) do |*params|
@@ -40,9 +40,16 @@ module Azucat::IRC
     end
 
     def start(&block)
-      while msg = @socket.gets
-        on_message(Message.parse(msg))
-        pong if msg.split(" ")[0] == "PING"
+      while str = @socket.gets
+        msg = Message.parse(str)
+
+        case msg.command
+        when "PING"
+          pong(str)
+        when "PONG"
+        else
+          on_message(msg)
+        end
       end
     end
 
@@ -54,6 +61,10 @@ module Azucat::IRC
 
     def command(msg)
       @logger.debug("[#{Time.now}] Command: #{msg}")
+      @socket.write(msg + @eol)
+    end
+
+    def pong(msg)
       @socket.write(msg + @eol)
     end
 

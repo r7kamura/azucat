@@ -1,5 +1,6 @@
 module Azucat::IRC
   class Message
+    attr_reader :prefix, :command, :params
 
     class InvalidMessage < StandardError; end
     def self.parse(str)
