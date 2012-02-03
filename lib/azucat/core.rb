@@ -1,6 +1,15 @@
 module Azucat
   module Core
+    def init(&block)
+      @inits ||= []
+      block ?
+        @inits << block :
+        @inits.each(&:call)
+    end
+
     def start(opts = {})
+      init
+
       opts = {
         :log_size     => 100,
         :ws_port      => unused_port,

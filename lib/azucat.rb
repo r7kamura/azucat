@@ -14,6 +14,9 @@ rescue Bundler::GemNotFound => e
 end
 
 module Azucat
+  require "azucat/core"
+  extend Core
+
   require "azucat/ext"
   require "azucat/http_server"
   require "azucat/http_app"
@@ -23,7 +26,4 @@ module Azucat
   require "azucat/browser"
   require "azucat/twitter"
   require "azucat/irc"
-
-  require "azucat/core"
-  extend Core
 end

@@ -1,9 +1,8 @@
 module Azucat
   class Twitter
-    def self.run(args)
-      return unless args[:twitter]
 
-      options = {
+    Azucat.init do
+      @config = {
         :host  => 'userstream.twitter.com',
         :path  => '/2/user.json',
         :ssl   => true,
@@ -16,8 +15,12 @@ module Azucat
           :consumer_secret => "iA5pDiQpNaAjFw6FwWSwDUVFppU4dHVxicprAcPRak"
         ))
       }
+    end
 
-      stream = ::Twitter::JSONStream.connect(options)
+    def self.run(args)
+      return unless args[:twitter]
+
+      stream = ::Twitter::JSONStream.connect(@config)
       stream.each_item         { |item| Output.puts convert_to_str(item) }
       stream.on_error          { |msg|  Output.puts "Error: #{msg}"      }
       stream.on_reconnect      {        Output.puts "Reconnect"          }
