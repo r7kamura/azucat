@@ -7,12 +7,11 @@
   <script type="text/javascript" src="/js/jquery.min.js"></script>
   <script type="text/javascript">
     $(function() {
-      var ws = new WebSocket("ws://localhost:<%= @ws_port %>");
+      var ws = new WebSocket('ws://localhost:<%= @ws_port %>');
       ws.onmessage = function(e) {
-        $(document.body).append("<pre>" + e.data + "</pre>");
-        document.title = e.data;
+        $(document.body).append('<pre>' + e.data + '</pre>');
+        document.title = e.data.replace(/<.*?>/g, '');
         window.scrollTo(0, document.body.scrollHeight);
-        console.log(e.data);
       };
     });
   </script>
