@@ -5,34 +5,15 @@
   <title>Azucat</title>
   <link rel="stylesheet" href="/css/style.css" />
   <script type="text/javascript" src="/js/jquery.min.js"></script>
-  <script type="text/javascript">
-    $(function() {
-      var ws = new WebSocket('ws://localhost:<%= @ws_port %>');
-      ws.onmessage = function(e) {
-        var base = (document.compatMode !== 'BackCompat') ?
-          document.documentElement : document.body;
-        var isScrolledToBottom = !(
-          base.scrollHeight -
-          base.clientHeight -
-          (window.pageYOffset || base.scrollTop)
-        );
-
-        $(document.body).append('<pre>' + e.data + '</pre>');
-        document.title = e.data.replace(/<.*?>/g, '');
-
-        if (isScrolledToBottom) {
-          window.scrollTo(0, document.body.scrollHeight);
-        }
-      };
-    });
-  </script>
+  <script type="text/javascript" src="/js/azucat.js"></script>
+  <script type="text/javascript"> Azucat.start(<%= @ws_port %>); </script>
 </head>
 <body>
   <!--
-    <p> log 1 </p>
-    <p> log 2 </p>
-    <p> log 3 </p>
-        ...
+    <pre> log 1 </pre>
+    <pre> log 2 </pre>
+    <pre> log 3 </pre>
+           ...
   -->
 </body>
 </html>
