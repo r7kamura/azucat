@@ -9,9 +9,20 @@
     $(function() {
       var ws = new WebSocket('ws://localhost:<%= @ws_port %>');
       ws.onmessage = function(e) {
+        var base = (document.compatMode !== 'BackCompat') ?
+          document.documentElement : document.body;
+        var isScrolledToBottom = !(
+          base.scrollHeight -
+          base.clientHeight -
+          (window.pageYOffset || base.scrollTop)
+        );
+
         $(document.body).append('<pre>' + e.data + '</pre>');
         document.title = e.data.replace(/<.*?>/g, '');
-        window.scrollTo(0, document.body.scrollHeight);
+
+        if (isScrolledToBottom) {
+          window.scrollTo(0, document.body.scrollHeight);
+        }
       };
     });
   </script>
