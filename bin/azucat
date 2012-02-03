@@ -4,8 +4,9 @@ $LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
 require "azucat"
 
 Azucat.start(
-  :twitter => true,
-  :irc     => {
+  :http_port => 9999,
+  :twitter   => true,
+  :irc       => {
     :server   => "irc.freenode.net",
     :port     => 6667,
     :channel  => "#azucat",
@@ -14,7 +15,7 @@ Azucat.start(
 )
 # example:
 #   Azucat.start(
-#     :log_size     => 10, 100,
+#     :log_size     => 100,
 #     :ws_port      => unused_port,
 #     :ws_host      => "localhost",
 #     :http_port    => unused_port,
