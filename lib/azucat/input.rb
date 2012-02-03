@@ -1,6 +1,8 @@
 module Azucat
-  class Input
-    def self.run(args)
+  module Input
+    extend self
+
+    def run(args)
       STDIN.each { |line| Output.puts(line) }
     end
   end

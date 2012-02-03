@@ -6,7 +6,7 @@ module Azucat
       end
     }
 
-    # define class instance variable and it's accessor
+    # define accessor of class instance variable
     # example:
     #   Output.channel
     #   Output.channel= EM::Channel.new
@@ -14,8 +14,16 @@ module Azucat
     class << self; attr_accessor :channel; end
 
     def self.puts(obj)
-      STDOUT.puts obj
-      channel << colorize(obj.to_s)
+      return if obj.blank?
+
+      str = obj.to_s
+      STDOUT.puts str
+      channel << htmlize(str)
+    end
+
+    def self.random_colorize(str)
+      code = COLORS[str.to_i(36) % COLORS.size]
+      "\e\[#{code}m#{str}\e\[0m"
     end
 
     private

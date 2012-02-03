@@ -14,7 +14,7 @@ module Azucat
 
       EM::WebSocket.start(:host => host, :port => port) do |ws|
         ws.onopen do
-          send_msg = proc { |msg| ws.send(msg) }
+          send_msg = proc { |msg| ws.send(msg.force_encoding("UTF-8")) }
           sid = channel.subscribe(&send_msg)
           logs.each(&send_msg)
           ws.onclose { channel.unsubscribe(sid) }

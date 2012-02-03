@@ -18,7 +18,8 @@ module Azucat
         EM.defer { WebSocketServer.run(opts) }
         EM.defer { Input.run(opts)           }
         EM.defer { Browser.open(opts)        }
-        EM.defer { Twitter.run(opts)         }
+        # EM.defer { Twitter.run(opts)         }
+        EM.defer { IRC.run                   }
       end
     end
 
@@ -30,6 +31,4 @@ module Azucat
       port
     end
   end
-
-  extend Core
 end
