@@ -4,15 +4,11 @@ module Azucat::IRC
   require "azucat/irc/message"
 
   extend self
-  def run
-    client = Client.new(
-      :server   => "irc.freenode.net",
-      :port     => 6667,
-      :channel  => "#test-r",
-      :username => "rrrrrrrrrr-uby",
-    )
+  def run(args)
+    return unless args[:irc]
 
-    client.on_message { |msg| Azucat::Output.puts msg }
-    client.start
+    Client.new(args[:irc])
+      .on_message { |msg| Azucat::Output.puts msg }
+      .start
   end
 end

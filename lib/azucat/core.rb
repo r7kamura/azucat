@@ -14,12 +14,15 @@ module Azucat
       Output.channel = opts[:channel]
       Thread.abort_on_exception = true
       EM.run do
+        # basic
         EM.defer { HTTPServer.run(opts)      }
         EM.defer { WebSocketServer.run(opts) }
         EM.defer { Input.run(opts)           }
         EM.defer { Browser.open(opts)        }
-        # EM.defer { Twitter.run(opts)         }
-        EM.defer { IRC.run                   }
+
+        # optional
+        EM.defer { Twitter.run(opts)         }
+        EM.defer { IRC.run(opts)             }
       end
     end
 

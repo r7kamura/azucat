@@ -1,5 +1,6 @@
 module Azucat
   class Output
+    COLORS = (31..36).to_a + (91..96).to_a
     COLOR_MAP = {}.tap { |map|
       Term::ANSIColor::ATTRIBUTES.each do |color, code|
         map[code.to_s] = color.to_s.gsub("_", "-")
@@ -27,7 +28,7 @@ module Azucat
     end
 
     private
-    def self.colorize(str)
+    def self.htmlize(str)
       str.gsub(/(?:\e\[([0-9;]*)m)/) do
         if $1 == "0"
           %{</span>}
