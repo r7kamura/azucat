@@ -4,6 +4,7 @@
 * WebSocketが動作するブラウザ + Ruby 1.8.7以上で動作します
 * 今のところ接続先等の設定は ./bin/azucat に直接記述しています...
 
+## Usage
 標準入力を渡す例
 
     $ tail -f foo.log | ./bin/azucat
