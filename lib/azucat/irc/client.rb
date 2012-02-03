@@ -10,7 +10,7 @@ module Azucat::IRC
       @password     = attr[:password]
       @eol          = attr[:eol] || "\r\n"
       @logger       = attr[:logger] || ::Logger.new(STDOUT)
-      @logger.level = ::Logger::DEBUG
+      @logger.level = ::Logger::INFO
       @is_connected = false
 
       connect
@@ -18,14 +18,14 @@ module Azucat::IRC
     end
 
     %w[
-      ADMIN   KICK    MOTD     QUIT    VERSION
-      AWAY    KNOCK   NAMES    RULES   VHOST
-      CREDITS LICENSE NICK     SETNAME WATCH
-      CYCLE   LINKS   NOTICE   SILENCE WHO
-      DALINFO LIST    PART     STATS   WHOIS
-      INVITE  LUSERS  PING     TIME    WHOWAS
-      ISON    MAP     TOPIC    PASS
-      JOIN    MODE    USERHOST USER
+      ADMIN   KICK    MOTD     QUIT     VERSION
+      AWAY    KNOCK   NAMES    RULES    VHOST
+      CREDITS LICENSE NICK     SETNAME  WATCH
+      CYCLE   LINKS   NOTICE   SILENCE  WHO
+      DALINFO LIST    PART     STATS    WHOIS
+      INVITE  LUSERS  PING     TIME     WHOWAS
+      ISON    MAP     PONG     TOPIC    USER
+      JOIN    MODE    PASS     USERHOST
     ].each do |name|
       define_method(name.downcase) do |*params|
         command [name, params].flatten.join(" ")
@@ -47,7 +47,7 @@ module Azucat::IRC
         when "PING"
           pong(str)
         when "PONG"
-        else
+        when *%w[JOIN KICK MODE NOTICE TOPIC PRIVMSG]
           on_message(msg)
         end
       end
@@ -61,10 +61,6 @@ module Azucat::IRC
 
     def command(msg)
       @logger.debug("[#{Time.now}] Command: #{msg}")
-      @socket.write(msg + @eol)
-    end
-
-    def pong(msg)
       @socket.write(msg + @eol)
     end
 
