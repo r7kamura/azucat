@@ -7,8 +7,8 @@ module Azucat::IRC
   def run(args)
     return unless args[:irc]
 
-    Client.new(args[:irc])
-      .on_message { |msg| Azucat::Output.puts msg }
-      .start
+    client = Client.new(args[:irc])
+    client.on_message { |msg| Azucat::Output.puts msg }
+    client.start
   end
 end

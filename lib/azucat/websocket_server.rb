@@ -15,8 +15,10 @@ module Azucat
       EM::WebSocket.start(:host => host, :port => port) do |ws|
         ws.onopen do
           send_msg = proc do |msg|
+            str = msg.respond_to?(:force_encoding) ?
+              msg.force_encoding("UTF-8") : msg
             begin
-              ws.send(msg.force_encoding("UTF-8"))
+              ws.send(str)
             rescue EventMachine::WebSocket::WebSocketError
             end
           end
