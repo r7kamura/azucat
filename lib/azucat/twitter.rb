@@ -1,7 +1,8 @@
 module Azucat
   class Twitter
 
-    Azucat.init do
+    Azucat.init do |opts|
+      next unless opts[:twitter]
       @config = {
         :host  => 'userstream.twitter.com',
         :path  => '/2/user.json',
@@ -15,6 +16,16 @@ module Azucat
           :consumer_secret => "iA5pDiQpNaAjFw6FwWSwDUVFppU4dHVxicprAcPRak"
         ))
       }
+      @twitter = ::TwitterOAuth::Client.new(
+        :consumer_key    => @config[:oauth][:consumer_key],
+        :consumer_secret => @config[:oauth][:consumer_secret],
+        :token           => @config[:oauth][:access_key],
+        :secret          => @config[:oauth][:access_secret]
+      )
+
+      Azucat::Output.notify do |filtered|
+        filtered.match("@" + @twitter.info["screen_name"])
+      end
     end
 
     def self.run(args)
@@ -35,7 +46,8 @@ module Azucat
         config[:consumer_key],
         config[:consumer_secret],
         :site  => "https://api.twitter.com",
-        :proxy => ENV["http_proxy"]
+        :proxy => ENV["http_proxy"],
+        :ssl   => true
       ).get_request_token
 
       puts "1) open: #{request_token.authorize_url}"

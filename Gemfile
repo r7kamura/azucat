@@ -9,6 +9,7 @@ gem "twitter-stream", :require => "twitter/json_stream"     # Twitter
 gem "twitter_oauth"                                         # Twitter
 gem "i18n"                                                  # for ActiveSupport
 gem "active_support", :require => "active_support/core_ext" # Utility
+gem "notify"                                                # Growl
 gem "bundler", "~> 1.0.0"                                   # Bundle.require
 
 group :development do

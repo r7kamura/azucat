@@ -1,15 +1,17 @@
 module Azucat
   module Core
-    def init(&block)
+    def init(opts = {}, &block)
       @inits ||= []
       block ?
         @inits << block :
-        @inits.each(&:call)
+        @inits.each { |proc| proc.call(opts) }
     end
 
     def start(opts = {})
-      init
+      # exit to press Ctrl+D
+      trap('INT') { exit! }
 
+      init(opts)
       opts = {
         :log_size     => 100,
         :ws_port      => unused_port,

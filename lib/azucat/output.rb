@@ -19,7 +19,13 @@ module Azucat
       return if obj.blank?
       str = uniform(obj)
 
-      STDOUT.puts str
+      uncolored = ::Term::ANSIColor.uncolored(str).strip
+      notify(
+        :filtered => uncolored,
+        :title    => uncolored.split(": ", 2)[0],
+        :message  => uncolored.split(": ", 2)[1]
+      )
+      STDOUT.puts(str)
       channel << htmlize(str)
     end
 
@@ -34,6 +40,18 @@ module Azucat
       tag  = "%4.4s" % hash[:tag]
       text = hash[:text]
       "#{name}: [#{tag}] #{text}"
+    end
+
+    def notify(args = {}, &block)
+      @notify_filters ||= []
+
+      if block
+        @notify_filters << block
+      else
+        if @notify_filters.map { |proc| proc.call(args[:filtered]) }.any?
+          Notify.notify args[:title], args[:message]
+        end
+      end
     end
 
     private

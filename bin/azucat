@@ -23,6 +23,7 @@ Azucat.start(
 #     :open_browser => true,
 #     :channel      => EM::Channel.new,
 #     :twitter      => true,
+#     :stdin        => true,
 #     :irc          => {
 #       :server   => "irc.freenode.net",
 #       :port     => 6667,

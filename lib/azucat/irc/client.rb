@@ -1,4 +1,5 @@
 module Azucat::IRC
+
   class Client
     def initialize(attr)
       @server       = attr[:server]
