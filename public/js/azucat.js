@@ -25,9 +25,9 @@ var Azucat = {
   },
 
   _appendToBody: function(str) {
-    str = this._addLink(str)
+    str = this._addLink(str);
     str = '<pre>' + str + '</pre>';
-    $(document.body).append(str)
+    $(document.body).append(str);
   },
 
   _updateTitle: function(str) {
@@ -51,4 +51,4 @@ var Azucat = {
   _scrollToBottom: function() {
     window.scrollTo(0, document.body.scrollHeight);
   }
-}
+};
