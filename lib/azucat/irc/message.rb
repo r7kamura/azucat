@@ -40,14 +40,11 @@ module Azucat::IRC
     end
 
     def to_s
-      user    = "%14.14s" % (@prefix || "").split("!").first
-      user    = Azucat::Output.random_colorize(user) unless user.empty?
-      user   += ":"
-      command = "[%4.4s]" % @command
-      params  = @params.join
-      params  = nil if params.empty?
-
-      [user, command, params].compact.join(" ")
+      Azucat::Output.stringify(
+        :name => (@prefix || "").split("!").first,
+        :tag  => @command,
+        :text => @params.join
+      )
     end
   end
 end

@@ -54,12 +54,11 @@ module Azucat
       hash = JSON.parse(tweet_json)
       return unless hash["user"]
 
-      user    = "%14.14s" % hash["user"]["screen_name"]
-      user    = Output.random_colorize(user) + ":"
-      command = "[TWIT]"
-      text    = hash["text"]
-
-      [user, command, text].join(" ")
+      Azucat::Output.stringify(
+        :name => hash["user"]["screen_name"],
+        :tag  => "TWIT",
+        :text => hash["text"]
+      )
     end
   end
 end
