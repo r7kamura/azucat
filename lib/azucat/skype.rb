@@ -2,25 +2,25 @@ module Azucat
   module Skype
     extend self
 
-    POLLING_SEC = 30
+    POLLING_SEC = 20
 
     Azucat.init do
-      @displayed = {}
+      @used_skype_messages = {}
+    end
+
+    Azucat.init do
       Skype.on_message do |msg|
         unique_key = msg.values.join
-        next if @displayed[unique_key]
-
         Azucat::Output.puts(
           :name => msg[:from_handle],
           :tag  => "SKYP",
           :text => msg[:body]
         )
-        @displayed[unique_key] = true
       end
     end
 
     def run(args)
-      return if !args[:skype] || RUBY_PLATFORM.downcase.include?("darwin")
+      return if !args[:skype] || !RUBY_PLATFORM.downcase.include?("darwin")
 
       @start_time = Time.now
       loop do
@@ -44,8 +44,10 @@ module Azucat
       messages = []
       recent_chat_ids.each do |chat_id|
         recent_message_ids(chat_id).each do |msg_id|
+          next if @used_skype_messages[msg_id]
           msg = message(msg_id)
           messages << msg if msg[:time] >= @start_time
+          @used_skype_messages[msg_id] = true
         end
       end
       messages.sort_by! { |msg| -msg[:timestamp].to_i }

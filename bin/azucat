@@ -5,8 +5,8 @@ require "azucat"
 
 Azucat.start(
   :http_port => 9999,
-  :skype => true,
-  # :twitter   => true,
+  :skype     => true,
+  :twitter   => true,
   # :irc       => {
   #   :server   => "irc.freenode.net",
   #   :port     => 6667,
