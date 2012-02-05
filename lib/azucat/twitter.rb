@@ -16,15 +16,15 @@ module Azucat
           :consumer_secret => "iA5pDiQpNaAjFw6FwWSwDUVFppU4dHVxicprAcPRak"
         ))
       }
-      @twitter = ::TwitterOAuth::Client.new(
+      @screen_name = ::TwitterOAuth::Client.new(
         :consumer_key    => @config[:oauth][:consumer_key],
         :consumer_secret => @config[:oauth][:consumer_secret],
         :token           => @config[:oauth][:access_key],
         :secret          => @config[:oauth][:access_secret]
-      )
+      ).info["screen_name"]
 
       Azucat::Output.notify do |filtered|
-        filtered.match("@" + @twitter.info["screen_name"])
+        filtered.match("@" + @screen_name)
       end
     end
 
