@@ -34,6 +34,7 @@ module Azucat
         # optional
         EM.defer { Twitter.run(opts)         }
         EM.defer { IRC.run(opts)             }
+        EM.defer { Skype.run(opts)           }
       end
     end
 

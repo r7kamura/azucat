@@ -5,13 +5,14 @@ require "azucat"
 
 Azucat.start(
   :http_port => 9999,
-  :twitter   => true,
-  :irc       => {
-    :server   => "irc.freenode.net",
-    :port     => 6667,
-    :channel  => "#azucat",
-    :username => "azucat"
-  }
+  :skype => true,
+  # :twitter   => true,
+  # :irc       => {
+  #   :server   => "irc.freenode.net",
+  #   :port     => 6667,
+  #   :channel  => "#azucat",
+  #   :username => "azucat"
+  # }
 )
 # example:
 #   Azucat.start(
