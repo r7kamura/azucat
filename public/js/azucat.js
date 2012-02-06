@@ -39,13 +39,15 @@ var Azucat = {
   },
 
   _isScrolledToBottom: function() {
+    var allowedError = 10;
     var base = (document.compatMode !== 'BackCompat') ?
       document.documentElement : document.body;
-    return !(
+    var diffFromBottom = (
       base.scrollHeight -
       base.clientHeight -
       (window.pageYOffset || base.scrollTop)
     );
+    return diffFromBottom <= allowedError;
   },
 
   _scrollToBottom: function() {
