@@ -63,14 +63,14 @@ module Azucat
       end
     end
 
-    t = {
-      ?& => "&amp;",
-      ?< => "&lt;",
-      ?> => "&gt;",
-      ?' => "&apos;",
-      ?" => "&quot;",
-    }
     def unhtmlize(str)
+      t = {
+        ?& => "&amp;",
+        ?< => "&lt;",
+        ?> => "&gt;",
+        ?' => "&apos;",
+        ?" => "&quot;"
+      }
       str.gsub(/(#{Regexp.union(t.values)})/o, t.invert)
     end
 
