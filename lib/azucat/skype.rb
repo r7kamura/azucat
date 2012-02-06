@@ -2,7 +2,7 @@ module Azucat
   module Skype
     extend self
 
-    POLLING_SEC = 20
+    POLLING_SEC = 30
 
     Azucat.init do
       @used_skype_messages = {}
@@ -24,8 +24,12 @@ module Azucat
 
       @start_time = Time.now
       loop do
+        start  = Time.now
         messages = gets
-        sleep POLLING_SEC
+        finish = Time.now
+
+        sleep_time = POLLING_SEC - (finish - start)
+        sleep sleep_time if sleep_time > 0
       end
     end
 
