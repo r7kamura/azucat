@@ -19,7 +19,6 @@ module Azucat
 
   require "azucat/ext"
   require "azucat/http_server"
-  require "azucat/http_app"
   require "azucat/websocket_server"
   require "azucat/input"
   require "azucat/output"
