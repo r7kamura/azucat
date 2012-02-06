@@ -25,7 +25,7 @@ module Azucat
         :title    => uncolored.split(": ", 2)[0],
         :message  => uncolored.split(": ", 2)[1]
       )
-      STDOUT.puts(str)
+      STDOUT.puts(unhtmlize(str))
       channel << htmlize(str)
     end
 
@@ -61,6 +61,17 @@ module Azucat
           %{</span>} :
           %{<span class="#{color_class_from_codes($1)}">}
       end
+    end
+
+    t = {
+      ?& => "&amp;",
+      ?< => "&lt;",
+      ?> => "&gt;",
+      ?' => "&apos;",
+      ?" => "&quot;",
+    }
+    def unhtmlize(str)
+      str.gsub(/(#{Regexp.union(t.values)})/o, t.invert)
     end
 
     def color_class_from_codes(codes)
