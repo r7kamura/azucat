@@ -5,21 +5,8 @@ module Azucat
     def run(opts = {})
       configure(opts)
       init
-
-      trap('INT') { exit! }
-      Thread.abort_on_exception = true
-      EM.run do
-        # basic
-        EM.defer { HTTPServer.run      }
-        EM.defer { WebSocketServer.run }
-        EM.defer { Input.run           }
-        EM.defer { Browser.run         }
-
-        # optional
-        EM.defer { Twitter.run         }
-        EM.defer { IRC.run             }
-        EM.defer { Skype.run           }
-      end
+      care_thread
+      run_threads
     end
 
     def init(&block)
@@ -28,13 +15,6 @@ module Azucat
     end
 
     private
-    def unused_port
-      s = ::TCPServer.open(0)
-      port = s.addr[1]
-      s.close
-      port
-    end
-
     def configure(opts)
       @config = Hashie::Mash.new(
         :file         => File.expand_path("~/.azucat"),
@@ -54,6 +34,28 @@ module Azucat
     def load_or_create_config_file
       file = config[:file]
       File.exists?(file) ? load(file) : File.open(file, "w")
+    end
+
+    def care_thread
+      trap('INT') { exit! }
+      Thread.abort_on_exception = true
+    end
+
+    def unused_port
+      s = ::TCPServer.open(0)
+      port = s.addr[1]
+      s.close
+      port
+    end
+
+    def run_threads
+      basics  = [HTTPServer, WebSocketServer, Input, Browser]
+      options = [Twitter, IRC, Skype]
+      EM.run do
+        (basics + options).each do |klass|
+          EM.defer { klass.send(:run) }
+        end
+      end
     end
   end
 end
