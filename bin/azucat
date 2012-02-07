@@ -3,7 +3,7 @@
 $LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
 require "azucat"
 
-Azucat.start(
+Azucat.run(
   :http_port => 9999,
   :skype     => true,
   :twitter   => true,
