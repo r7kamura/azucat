@@ -9,12 +9,6 @@ module Azucat
       end
     end
 
-    # define accessor of class instance variable
-    # example:
-    #   Output.channel
-    #   Output.channel= EM::Channel.new
-    class << self; attr_accessor :channel; end
-
     def puts(obj)
       return if obj.blank?
       str = uniform(obj)
@@ -26,7 +20,7 @@ module Azucat
         :message  => uncolored.split(": ", 2)[1]
       )
       STDOUT.puts(unhtmlize(str))
-      channel << htmlize(str)
+      Azucat.config.channel << htmlize(str)
     end
 
     def colorize(str)

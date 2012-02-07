@@ -6,16 +6,16 @@ module Azucat::IRC
   extend self
 
   Azucat.init do |opts|
-    next unless opts[:irc]
+    next unless Azucat.config.irc
     Azucat::Output.notify do |filtered|
-      filtered.match(opts[:irc][:username])
+      filtered.match(config.irc.username)
     end
   end
 
-  def run(args)
-    return unless args[:irc]
+  def run
+    return unless Azucat.config.irc
 
-    client = Client.new(args[:irc])
+    client = Client.new(Azucat.config.irc)
     client.on_message do |msg|
       Azucat::Output.puts msg
     end

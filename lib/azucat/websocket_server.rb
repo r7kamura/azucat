@@ -1,18 +1,18 @@
 module Azucat
   class WebSocketServer
-    def self.run(args)
-      channel  = args[:channel]
-      port     = args[:ws_port]
-      host     = args[:ws_host]
-      log_size = args[:log_size]
+    def self.run
+      logs   = []
+      config = Azucat.config
 
-      logs = []
-      channel.subscribe do |msg|
+      config.channel.subscribe do |msg|
         logs << msg
-        logs.shift if logs.size > log_size
+        logs.shift if logs.size > config.log_size
       end
 
-      EM::WebSocket.start(:host => host, :port => port) do |ws|
+      EM::WebSocket.start(
+        :host => config.ws_host,
+        :port => config.ws_port
+      ) do |ws|
         ws.onopen do
           send_msg = proc do |msg|
             str = msg.respond_to?(:force_encoding) ?
@@ -23,13 +23,13 @@ module Azucat
             end
           end
 
-          sid = channel.subscribe(&send_msg)
+          sid = config.channel.subscribe(&send_msg)
           logs.each(&send_msg)
-          ws.onclose { channel.unsubscribe(sid) }
+          ws.onclose { config.channel.unsubscribe(sid) }
         end
 
         ws.onmessage do |msg|
-          channel << msg
+          config.channel << msg
         end
 
         ws.onerror do |e|

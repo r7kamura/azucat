@@ -1,21 +1,27 @@
 module Azucat
   class Twitter
 
-    Azucat.init do |opts|
-      next unless opts[:twitter]
+    Azucat.init do
+      next unless Azucat.config.twitter
+
+      if Azucat.config.access_key.blank? || Azucat.config.access_secret.blank?
+        get_access_token
+      end
       @config = {
         :host  => 'userstream.twitter.com',
         :path  => '/2/user.json',
         :ssl   => true,
         :oauth => {
-          :access_key    => nil,
-          :access_secret => nil,
-          :proxy         => ENV["http_proxy"]
-        }.merge(get_access_token(
-          :consumer_key    => "B2tZeyZ96bB7BdQuk6r0A",
-          :consumer_secret => "iA5pDiQpNaAjFw6FwWSwDUVFppU4dHVxicprAcPRak"
-        ))
+          :access_key      => nil,
+          :access_secret   => nil,
+          :proxy           => ENV["http_proxy"],
+          :consumer_key    => Azucat.config.consumer_key,
+          :consumer_secret => Azucat.config.consumer_secret,
+          :access_key      => Azucat.config.access_key,
+          :access_secret   => Azucat.config.access_secret
+        }
       }
+
       @screen_name = ::TwitterOAuth::Client.new(
         :consumer_key    => @config[:oauth][:consumer_key],
         :consumer_secret => @config[:oauth][:consumer_secret],
@@ -28,8 +34,8 @@ module Azucat
       end
     end
 
-    def self.run(args)
-      return unless args[:twitter]
+    def self.run
+      return unless Azucat.config.twitter
 
       stream = ::Twitter::JSONStream.connect(@config)
       stream.each_item         { |item| Output.puts convert_to_str(item) }
@@ -41,10 +47,10 @@ module Azucat
     end
 
     private
-    def self.get_access_token(config)
+    def self.get_access_token
       request_token = OAuth::Consumer.new(
-        config[:consumer_key],
-        config[:consumer_secret],
+        Azucat.config[:consumer_key],
+        Azucat.config[:consumer_secret],
         :site  => "https://api.twitter.com",
         :proxy => ENV["http_proxy"],
         :ssl   => true
@@ -57,9 +63,15 @@ module Azucat
       pin = STDIN.gets.strip
 
       access_token = request_token.get_access_token(:oauth_verifier => pin)
+      config = Azucat.config
       config[:access_key]    = access_token.token
       config[:access_secret] = access_token.secret
-      config
+      puts %{Saving 'token' and 'secret' to '#{config[:file]}'}
+      File.open(Azucat.config[:file], "a") do |f|
+        f.puts %{Azucat.config[:access_key]    = '#{config[:access_key]}'}
+        f.puts %{Azucat.config[:access_secret] = '#{config[:access_secret]}'}
+      end
+      access_token
     end
 
     def self.convert_to_str(tweet_json)

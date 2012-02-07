@@ -19,8 +19,10 @@ module Azucat
       end
     end
 
-    def run(args)
-      return if !args[:skype] || !RUBY_PLATFORM.downcase.include?("darwin")
+    def run
+      if Azucat.config.skype || !RUBY_PLATFORM.downcase.include?("darwin")
+        return
+      end
 
       @start_time = Time.now
       loop do

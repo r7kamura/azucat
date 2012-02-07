@@ -1,8 +1,8 @@
 class Azucat::Browser
-  def self.open(args)
-    open_browser = args[:open_browser]
-    http_host    = args[:http_host]
-    http_port    = args[:http_port]
+  def self.run
+    open_browser = Azucat.config.open_browser
+    http_host    = Azucat.config.http_host
+    http_port    = Azucat.config.http_port
 
     return unless open_browser
     EM.defer {
