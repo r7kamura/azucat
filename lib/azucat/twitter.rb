@@ -5,7 +5,7 @@ module Azucat
     Azucat.init do
       next unless Azucat.config.twitter
       setup_config
-      setup_client
+      setup_client_and_info
       Azucat::Output.notify { |str| str.match("@" + @info["screen_name"]) }
     end
 
@@ -39,7 +39,7 @@ module Azucat
       }
     end
 
-    def setup_client
+    def setup_client_and_info
       @client = ::TwitterOAuth::Client.new(
         :consumer_key    => @config[:oauth][:consumer_key],
         :consumer_secret => @config[:oauth][:consumer_secret],
