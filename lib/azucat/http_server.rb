@@ -14,18 +14,13 @@ module Azucat
           end
 
           post "/" do
-            tweet(params[:command])
+            Azucat::Twitter.tweet(params[:command])
           end
         },
         :Port      => Azucat.config.http_port,
         :Logger    => ::WEBrick::Log.new("/dev/null"),
         :AccessLog => [nil, nil]
       )
-    end
-
-    private
-    def tweet(str)
-      Twitter.tweet(params[:command])
     end
   end
 end
