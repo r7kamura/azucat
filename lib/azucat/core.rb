@@ -49,7 +49,7 @@ module Azucat
     end
 
     def run_threads
-      basics  = [HTTPServer, WebSocketServer, Input, Browser]
+      basics  = [HTTPServer, WebSocketServer, Input]
       options = [Twitter, IRC, Skype]
       EM.run do
         (basics + options).each do |klass|

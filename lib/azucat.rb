@@ -22,7 +22,6 @@ module Azucat
   require "azucat/websocket_server"
   require "azucat/input"
   require "azucat/output"
-  require "azucat/browser"
   require "azucat/twitter"
   require "azucat/irc"
   require "azucat/skype"
