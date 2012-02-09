@@ -55,7 +55,7 @@ header input {
 .italic             { font-style: italic          }
 .underline          { text-decoration: underline  }
 .black              { color: black                }
-.red                { color: red                  }
+.red                { color: orangered            }
 .green              { color: green                }
 .yellow             { color: yellow               }
 .blue               { color: royalBlue            }
@@ -71,12 +71,12 @@ header input {
 .on-cyan            { background-color: cyan      }
 .on-white           { background-color: white     }
 .intense-black      { color: black                }
-.intense-red        { color: red                  }
-.intense-green      { color: green                }
-.intense-yellow     { color: yellow               }
-.intense-blue       { color: royalBlue            }
-.intense-magenta    { color: magenta              }
-.intense-cyan       { color: cyan                 }
+.intense-red        { color: tomato               }
+.intense-green      { color: yellowgreen          }
+.intense-yellow     { color: lightgoldenrodyellow }
+.intense-blue       { color: skyblue              }
+.intense-magenta    { color: deeppink             }
+.intense-cyan       { color: turquoise            }
 .intense-white      { color: white                }
 .on-intense-black   { background-color: black     }
 .on-intense-red     { background-color: red       }
