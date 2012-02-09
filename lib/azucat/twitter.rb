@@ -65,7 +65,7 @@ module Azucat
       get_and_save_access_token
     end
 
-    def please_open_authorize_url(msg)
+    def please_open_authorize_url
       puts "1) Open: #{request_token.authorize_url}"
       ::Launchy.open(request_token.authorize_url) rescue nil
     end
