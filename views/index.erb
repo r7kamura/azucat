@@ -3,17 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <title>Azucat</title>
-  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/style.css"/>
   <script type="text/javascript" src="/js/jquery.min.js"></script>
   <script type="text/javascript" src="/js/azucat.js"></script>
   <script type="text/javascript"> Azucat.start(<%= @ws_port %>); </script>
 </head>
 <body>
-  <!--
-    <pre> log 1 </pre>
-    <pre> log 2 </pre>
-    <pre> log 3 </pre>
-           ...
-  -->
+  <header>
+    <div class="inner">
+      <form action="" method="POST" data-remote>
+        <input type="text" name="command"/>
+      </form>
+    </div>
+  </header>
+  <div id="timeline">
+  </div>
 </body>
 </html>

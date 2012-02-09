@@ -9,6 +9,10 @@ class Azucat::HTTPServer
           @ws_port = settings.ws_port
           erb :index
         end
+
+        post "/" do
+          ap params
+        end
       },
       :Port      => Azucat.config.http_port,
       :Logger    => ::WEBrick::Log.new("/dev/null"),

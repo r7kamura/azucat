@@ -20,7 +20,7 @@ module Azucat
     end
 
     def run
-      if Azucat.config.skype || !RUBY_PLATFORM.downcase.include?("darwin")
+      if !Azucat.config.skype || !RUBY_PLATFORM.downcase.include?("darwin")
         return
       end
 
