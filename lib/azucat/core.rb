@@ -15,7 +15,7 @@ module Azucat
     end
 
     private
-    def configure(opts)
+    def configure(opts = {})
       @config = Hashie::Mash.new(
         :file         => File.expand_path("~/.azucat"),
         :log_size     => 100,
