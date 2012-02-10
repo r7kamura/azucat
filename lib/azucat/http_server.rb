@@ -30,7 +30,7 @@ module Azucat
       return unless Azucat.config.open_browser
       http_host   = Azucat.config.http_host
       http_port   = Azucat.config.http_port
-      ::Launchy.open("http://#{http_host}:#{http_port}")
+      ::Launchy.open("http://#{http_host}:#{http_port}") rescue nil
     end
   end
 end
