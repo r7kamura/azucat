@@ -1,8 +1,9 @@
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 require "tempfile"
+require "socket"
 
 describe Azucat::Core do
-  describe "configure" do
+  describe "#configure" do
     before do
       Tempfile.new(".azucat").tap { |f| @path = f.path }.unlink
     end
@@ -34,8 +35,8 @@ describe Azucat::Core do
     end
   end
 
-  describe "run threads" do
-    it "lets classes to call .run method" do
+  describe "#run_threads" do
+    it "let classes to call .run method" do
       [
         Azucat::HTTPServer,
         Azucat::WebSocketServer,
@@ -45,6 +46,14 @@ describe Azucat::Core do
       ].each { |klass| klass.should_receive(:run) }
       Azucat::Skype.send(:define_method, :run, proc { EM.stop_event_loop })
       Azucat.send(:run_threads)
+    end
+  end
+
+  describe "#unused_port" do
+    it "return unused port" do
+      expect {
+        TCPServer.open(Azucat.send(:unused_port)).close
+      }.not_to raise_error(Errno::EADDRINUSE)
     end
   end
 end

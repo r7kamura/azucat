@@ -20,6 +20,7 @@ end
 group :development do
   gem "pry"
   gem "awesome_print"
+  gem "tapp"
 end
 
 group :test do
