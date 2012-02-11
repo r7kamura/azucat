@@ -7,7 +7,7 @@ describe Azucat::Command do
 
   describe "#register and #input" do
     before do
-      STDOUT.stub(:puts)
+      Azucat::Command.stub(:output)
     end
 
     it "register command and respond only to matched input" do
@@ -19,6 +19,19 @@ describe Azucat::Command do
 
       @self.input("foo")
       flag.should be_true
+    end
+  end
+
+  describe "commands" do
+    before do
+      Azucat::Command.stub(:output)
+    end
+
+    it "tweet" do
+      Azucat::Twitter.should_receive(:tweet) do |args|
+        args.should == "foo"
+      end
+      Azucat::Command.input("tweet foo")
     end
   end
 end

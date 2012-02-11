@@ -18,6 +18,7 @@ module Azucat
   extend Core
 
   require "azucat/ext"
+  require "azucat/command"
   require "azucat/http_server"
   require "azucat/websocket_server"
   require "azucat/input"
@@ -26,5 +27,4 @@ module Azucat
   require "azucat/irc"
   require "azucat/skype"
   require "azucat/manager"
-  require "azucat/command"
 end

@@ -9,10 +9,14 @@ module Azucat
       Azucat::Output.notify { |str| str.match("@" + @info["screen_name"]) }
     end
 
+    Azucat::Command.register /^tweet (.+)/ do |m|
+      tweet(m[1])
+    end
+
     def run
       return unless Azucat.config.twitter
-      start_stream
       recent
+      start_stream
     end
 
     def tweet(str)
