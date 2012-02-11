@@ -24,7 +24,7 @@ module Azucat
     end
 
     def recent
-      @client.home_timeline.each do |tweet|
+      @client.home_timeline.reverse_each do |tweet|
         Output.puts parse_tweet(tweet)
       end
     end
