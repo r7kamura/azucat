@@ -14,7 +14,7 @@ module Azucat
           end
 
           post "/" do
-            Azucat::Twitter.tweet(params[:command])
+            Command.input(params[:command])
           end
         },
         :Port          => Azucat.config.http_port,

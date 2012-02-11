@@ -26,4 +26,5 @@ module Azucat
   require "azucat/irc"
   require "azucat/skype"
   require "azucat/manager"
+  require "azucat/command"
 end
