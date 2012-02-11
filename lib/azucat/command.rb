@@ -23,7 +23,7 @@ module Azucat
     def output(str)
       Output.puts(
         :name => "your input",
-        :tag  => "<<>>",
+        :tag  => ">>>>",
         :text => str
       )
     end
@@ -46,6 +46,31 @@ module Azucat
         num -= 1
       end
       Output.puts(:name => "README.md", :tag => "----", :text => "-" * 70)
+    end
+
+    register /^> (.+)/ do |m|
+      begin
+        lines = eval(m[1]).ai(:plain => true, :indent => 2).split(/\n|\\n/)
+        if lines.first.match(/^\"/) and lines.last.match(/^\"$/)
+          lines.first.gsub!(/^\"/, "")
+          lines.pop
+        end
+        num   = lines.size
+
+        lines.reverse_each do |line|
+          Output.puts(
+            :name => "result",
+            :tag  => num,
+            :text => line
+          )
+          num -= 1
+        end
+      rescue Exception => e
+        Output.puts(
+          :name => "ERROR",
+          :text => "#{e.class} - #{e.message}"
+        )
+      end
     end
   end
 end

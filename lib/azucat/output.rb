@@ -8,6 +8,13 @@ module Azucat
         map[code.to_s] = color.to_s.gsub("_", "-")
       end
     end
+    ENTITY_MAP = {
+      ?& => "&amp;",
+      ?< => "&lt;",
+      ?> => "&gt;",
+      ?' => "&apos;",
+      ?" => "&quot;"
+    }
 
     def puts(obj)
       return if obj.blank?
@@ -50,7 +57,8 @@ module Azucat
 
     private
     def htmlize(str)
-      str.gsub(/(?:\e\[([0-9;]*)m)/) do
+      str.gsub!(/(#{Regexp.union(ENTITY_MAP.keys)})/o, ENTITY_MAP)
+      str.gsub!(/(?:\e\[([0-9;]*)m)/) do
         $1 == "0" ?
           %{</span>} :
           %{<span class="#{color_class_from_codes($1)}">}
@@ -58,14 +66,7 @@ module Azucat
     end
 
     def unhtmlize(str)
-      t = {
-        ?& => "&amp;",
-        ?< => "&lt;",
-        ?> => "&gt;",
-        ?' => "&apos;",
-        ?" => "&quot;"
-      }
-      str.gsub(/(#{Regexp.union(t.values)})/o, t.invert)
+      str.gsub(/(#{Regexp.union(ENTITY_MAP.values)})/o, ENTITY_MAP.invert)
     end
 
     def color_class_from_codes(codes)
