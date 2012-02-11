@@ -4,8 +4,9 @@ describe Azucat::HTTPServer do
   describe "#open_browser" do
     context "normally" do
       before do
-        @port = Azucat.config.http_port = 9999
-        @host = Azucat.config.http_host = "localhost"
+        Azucat.send(:configure)
+        @port = Azucat.config.http_port
+        @host = Azucat.config.http_host
         ::Launchy.should_receive(:open) { |url| url }
       end
       it "open browser with its host and port" do

@@ -1,7 +1,5 @@
 module Azucat
   module Core
-    attr_accessor :config
-
     def run(opts = {})
       configure(opts)
       init
@@ -12,6 +10,10 @@ module Azucat
     def init(&block)
       @inits ||= []
       block ? @inits << block : @inits.each(&:call)
+    end
+
+    def config
+      @config ||= Hashie::Mash.new
     end
 
     private
