@@ -19,6 +19,10 @@ describe Azucat::Output do
         Azucat.send(:configure, :channel => @channel)
       end
 
+      after do
+        Azucat.send(:configure, :channel => EM::Channel.new)
+      end
+
       it "do nothing and return nil" do
         @channel.should_not_receive(:<<)
         @self.puts("").should be_nil
@@ -30,6 +34,10 @@ describe Azucat::Output do
       before do
         @channel = mock("channel")
         Azucat.send(:configure, :channel => @channel)
+      end
+
+      after do
+        Azucat.send(:configure, :channel => EM::Channel.new)
       end
 
       it "make it up and push to channel and STDOUT" do
