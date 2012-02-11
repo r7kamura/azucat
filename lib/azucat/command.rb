@@ -3,6 +3,11 @@ module Azucat
     extend self
 
     def input(str)
+      Output.puts(
+        :name => "your input",
+        :tag  => "<<>>",
+        :text => str
+      )
       commands.each do |com|
         com[:proc].call(str) if str.match com[:pattern]
       end
