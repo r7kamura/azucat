@@ -44,7 +44,7 @@ var Azucat = {
   },
 
   addLink: function(str) {
-    return str.replace(/(http:\/\/[\x21-\x7e]+)/gi, '<a href="$1">$1</a>');
+    return str.replace(/(https?:\/\/[\x21-\x7e]+)/gi, '<a href="$1">$1</a>');
   },
 
   prependToBody: function(str) {

@@ -25,4 +25,5 @@ module Azucat
   require "azucat/twitter"
   require "azucat/irc"
   require "azucat/skype"
+  require "azucat/manager"
 end

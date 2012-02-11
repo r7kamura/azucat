@@ -7,29 +7,33 @@ module Azucat
       run_threads
     end
 
+    def stop
+      EM.stop_event_loop
+    end
+
     def init(&block)
       @inits ||= []
       block ? @inits << block : @inits.each(&:call)
     end
 
     def config
-      @config ||= Hashie::Mash.new
+      @config ||= Hashie::Mash.new(
+        :file            => File.expand_path("~/.azucat"),
+        :log_size        => 100,
+        :ws_port         => unused_port,
+        :ws_host         => "localhost",
+        :http_port       => unused_port,
+        :http_host       => "localhost",
+        :open_browser    => true,
+        :channel         => EM::Channel.new,
+        :consumer_key    => "B2tZeyZ96bB7BdQuk6r0A",
+        :consumer_secret => "iA5pDiQpNaAjFw6FwWSwDUVFppU4dHVxicprAcPRak"
+      )
     end
 
     private
     def configure(opts = {})
-      @config = Hashie::Mash.new(
-        :file         => File.expand_path("~/.azucat"),
-        :log_size     => 100,
-        :ws_port      => unused_port,
-        :ws_host      => "localhost",
-        :http_port    => unused_port,
-        :http_host    => "localhost",
-        :open_browser => true,
-        :channel      => EM::Channel.new,
-        :consumer_key    => "B2tZeyZ96bB7BdQuk6r0A",
-        :consumer_secret => "iA5pDiQpNaAjFw6FwWSwDUVFppU4dHVxicprAcPRak"
-      ).merge(opts)
+      config.merge!(opts)
       load_or_create_config_file
     end
 
@@ -51,10 +55,11 @@ module Azucat
     end
 
     def run_threads
-      basics  = [HTTPServer, WebSocketServer, Input]
-      options = [Twitter, IRC, Skype]
       EM.run do
-        (basics + options).each do |klass|
+        [
+          HTTPServer, WebSocketServer, Input,
+          Twitter, IRC, Skype, Manager
+        ].each do |klass|
           EM.defer { klass.send(:run) }
         end
       end

@@ -1,8 +1,37 @@
-require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
+require File.expand_path("../spec_helper", File.dirname(__FILE__))
 require "tempfile"
 require "socket"
 
 describe Azucat::Core do
+  describe "#config" do
+    context "when not set value" do
+      it "return a instance of Hashie::Mash" do
+        Azucat.config.should be_a_instance_of Hashie::Mash
+      end
+
+      it "set and get value by method call" do
+        Azucat.config.foo = "foo"
+        Azucat.config.foo.should == "foo"
+      end
+    end
+  end
+
+  describe "#run" do
+    it "configure options and run sub classed" do
+      [
+        Azucat::HTTPServer,
+        Azucat::WebSocketServer,
+        Azucat::Input,
+        Azucat::Twitter,
+        Azucat::IRC,
+        Azucat::Skype
+      ].each { |klass| klass.should_receive(:run) }
+      Azucat::Manager.send(:define_method, :run, proc { Azucat.stop })
+      Azucat.run(:foo => "foo")
+      Azucat.config.run
+    end
+  end
+
   describe "#configure" do
     before do
       Tempfile.new(".azucat").tap { |f| @path = f.path }.unlink
@@ -42,9 +71,10 @@ describe Azucat::Core do
         Azucat::WebSocketServer,
         Azucat::Input,
         Azucat::Twitter,
-        Azucat::IRC
+        Azucat::IRC,
+        Azucat::Skype
       ].each { |klass| klass.should_receive(:run) }
-      Azucat::Skype.send(:define_method, :run, proc { EM.stop_event_loop })
+      Azucat::Manager.send(:define_method, :run, proc { Azucat.stop })
       Azucat.send(:run_threads)
     end
   end
