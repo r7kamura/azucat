@@ -10,11 +10,19 @@ module Azucat
     end
 
     def run
-      start_stream if Azucat.config.twitter
+      return unless Azucat.config.twitter
+      start_stream
+      recent
     end
 
     def tweet(str)
       @client.update(str)
+    end
+
+    def recent
+      @client.home_timeline.each do |tweet|
+        Output.puts parse_tweet(tweet)
+      end
     end
 
     private
@@ -103,8 +111,8 @@ module Azucat
       end
     end
 
-    def parse_tweet(tweet_json)
-      tweet = JSON.parse(tweet_json)
+    def parse_tweet(tweet)
+      tweet = JSON.parse(tweet) if tweet.class == String
       return unless tweet["user"]
       {
         :name => tweet["user"]["screen_name"],
