@@ -6,8 +6,8 @@ describe Azucat::Command do
   end
 
   describe "#register and #input" do
-    it do
-      @self.should be_respond_to :register
+    before do
+      STDOUT.stub(:puts)
     end
 
     it "register command and respond only to matched input" do
