@@ -18,6 +18,7 @@ module Azucat
 
     def config
       @config ||= Hashie::Mash.new(
+        :root            => File.expand_path("../../../", __FILE__),
         :file            => File.expand_path("~/.azucat"),
         :log_size        => 100,
         :ws_port         => unused_port,

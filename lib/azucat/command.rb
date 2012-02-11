@@ -35,5 +35,17 @@ module Azucat
         end
       end
     end
+
+    register /^help$/ do
+      lines = File.read(Azucat.config.root + "/README.md").split("\n")
+      num   = lines.size
+
+      Output.puts(:name => "README.md", :tag => "----", :text => "-" * 70)
+      lines.reverse_each do |line|
+        Output.puts(:tag => num, :text => line)
+        num -= 1
+      end
+      Output.puts(:name => "README.md", :tag => "----", :text => "-" * 70)
+    end
   end
 end
