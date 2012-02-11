@@ -4,7 +4,7 @@
 }
 
 body {
-  background-color: #222;
+  background: #222;
 }
 
 pre {
@@ -24,10 +24,11 @@ header {
   top: 0;
   left: 0;
   width: 100%;
+  background: #222;
 }
 
 header .inner {
-  margin: 1em;
+  margin: 1em 1em 0;
 }
 
 header form {
