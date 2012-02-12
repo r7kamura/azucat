@@ -16,16 +16,6 @@ describe Azucat::Command do
   end
 
   describe "commands" do
-    describe "help" do
-      it "read README.md" do
-        File.should_receive(:read) do |args|
-          args.should match(/README\.md/)
-          args
-        end
-        @self.input("help")
-      end
-    end
-
     describe "> " do
       it "eval input" do
         @self.should_receive(:eval)

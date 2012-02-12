@@ -27,6 +27,7 @@ module Azucat
     end
 
     def error(e)
+      self.puts(e.backtrace)
       self.puts(:text => "#{e.class} - #{e.message}")
     end
 
@@ -82,8 +83,8 @@ module Azucat
     end
 
     def uniform(obj)
-      str = (obj.class == Hash) ? stringify(obj) : obj.to_s
-      str.gsub("\n", " ")
+      hash = obj.is_a?(Hash) ? obj : { :text => obj.to_s }
+      stringify(hash).gsub("\n", " ")
     end
 
     def puts_multi(lines)

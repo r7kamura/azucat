@@ -42,13 +42,10 @@ describe Azucat::Output do
       end
 
       it "make it up and push to channel and STDOUT" do
-        str = "\e\[31m &lt;foo&gt; \e\[0m"
-        @channel.should_receive(:<<) do |args|
-          args.should == @self.send(:htmlize, str)
-        end
-        STDOUT.should_receive(:puts) do |args|
-          args.should == @self.send(:unhtmlize, str)
-        end
+        str    = "\e\[31m &lt;foo&gt; \e\[0m"
+        prefix = " " * 14 + ": [    ] "
+        @channel.should_receive(:<<).with(prefix + @self.send(:htmlize,   str))
+        STDOUT.should_receive(:puts).with(prefix + @self.send(:unhtmlize, str))
         @self.puts(str)
       end
     end
@@ -141,12 +138,27 @@ describe Azucat::Output do
   end
 
   describe "#uniform" do
-    it "stringify hash" do
-      @self.send(:uniform, {}).should == @self.send(:stringify, {})
+    subject { @self.send(:uniform, args) }
+
+    context "when passed hash" do
+      let(:args) { {} }
+      it "stringify hash" do
+        should == @self.send(:stringify, {})
+      end
     end
 
-    it "remove linebreaks" do
-      @self.send(:uniform, "foo\nbar").should == "foo bar"
+    context "when passed string" do
+      let(:args) { "foo" }
+      it "deal string as hash with it in hash[:text]" do
+        should == @self.send(:stringify, {:text => "foo"})
+      end
+    end
+
+    context "when passed string with linebreaks" do
+      let(:args) { "foo\nbar\n" }
+      it "remove linebreaks" do
+        should_not match(/\n/)
+      end
     end
   end
 end

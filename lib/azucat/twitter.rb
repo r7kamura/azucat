@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 module Azucat
   module Twitter
     extend self
@@ -13,7 +15,11 @@ module Azucat
       end
 
       Notify.register(?@ + @info["screen_name"])
-      Command.register(/^(?:t|tweet) (.+)/) { |m| tweet(m[1]) }
+      Command.register(:t,     "tweet <param>")       { |m| tweet(m[1]) }
+      Command.register(:tweet, "tweet <param>")       { |m| tweet(m[1]) }
+      Command.register(:'!',   "tweet ＼<param>！／") { |m|
+        tweet "＼#{m[1]}！／"
+      }
     end
 
     def run
