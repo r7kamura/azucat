@@ -57,8 +57,8 @@ module Azucat
 
     private
     def htmlize(str)
-      str.gsub!(/(#{Regexp.union(ENTITY_MAP.keys)})/o, ENTITY_MAP)
-      str.gsub!(/(?:\e\[([0-9;]*)m)/) do
+      result = str.gsub(/(#{Regexp.union(ENTITY_MAP.keys)})/o, ENTITY_MAP)
+      result.gsub(/(?:\e\[([0-9;]*)m)/) do
         $1 == "0" ?
           %{</span>} :
           %{<span class="#{color_class_from_codes($1)}">}

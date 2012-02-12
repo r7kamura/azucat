@@ -15,6 +15,7 @@ module Azucat
       ) do |ws|
         ws.onopen do
           send_msg = proc do |msg|
+            next unless msg
             str = msg.respond_to?(:force_encoding) ?
               msg.force_encoding("UTF-8") : msg
             begin
