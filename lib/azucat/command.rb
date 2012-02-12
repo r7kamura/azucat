@@ -37,14 +37,8 @@ module Azucat
     end
 
     register /^help$/ do
-      lines = File.read(Azucat.config.root + "/README.md").split("\n")
-      num   = lines.size
-
       Output.puts(:name => "README.md", :tag => "----", :text => "-" * 70)
-      lines.reverse_each do |line|
-        Output.puts(:tag => num, :text => line)
-        num -= 1
-      end
+      Output.puts(File.read(Azucat.config.root + "/README.md").split("\n"))
       Output.puts(:name => "README.md", :tag => "----", :text => "-" * 70)
     end
 
@@ -55,21 +49,9 @@ module Azucat
           lines.first.gsub!(/^\"/, "")
           lines.pop
         end
-        num   = lines.size
-
-        lines.reverse_each do |line|
-          Output.puts(
-            :name => "result",
-            :tag  => num,
-            :text => line
-          )
-          num -= 1
-        end
+        Output.puts(lines)
       rescue Exception => e
-        Output.puts(
-          :name => "ERROR",
-          :text => "#{e.class} - #{e.message}"
-        )
+        Output.error(e)
       end
     end
   end

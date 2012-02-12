@@ -13,7 +13,7 @@ describe Azucat::Output do
   end
 
   describe "#puts" do
-    context "when passed nil or empty string" do
+    context "when passed blank object" do
       before do
         @channel = mock("channel")
         Azucat.send(:configure, :channel => @channel)
@@ -27,10 +27,11 @@ describe Azucat::Output do
         @channel.should_not_receive(:<<)
         @self.puts("").should be_nil
         @self.puts(nil).should be_nil
+        @self.puts([]).should be_nil
       end
     end
 
-    context "when passed string" do
+    context "when passed String" do
       before do
         @channel = mock("channel")
         Azucat.send(:configure, :channel => @channel)
@@ -50,6 +51,28 @@ describe Azucat::Output do
         end
         @self.puts(str)
       end
+    end
+
+    context "when passed Array" do
+      it "call #puts_multi" do
+        @self.should_receive(:puts_multi)
+        @self.puts([1, 2, 3])
+      end
+    end
+  end
+
+  describe "#puts_multi" do
+    before do
+      @self.stub(:puts)
+    end
+
+    it "call #puts to each line with line number in reverse" do
+      lines = %w[a b c]
+      @self.should_receive(:puts) do |args|
+        args[:tag].should  == lines.size
+        args[:text].should == lines.pop
+      end
+      @self.send(:puts_multi, lines)
     end
   end
 
@@ -87,7 +110,7 @@ describe Azucat::Output do
     end
 
     context "when passed empty hash" do
-      it "convert hash to string in the form of `name: [ tag] text`" do
+      it "convert hash to string in the form of `    : [    ]`" do
         @self.stringify({}).should == (" " * 14 + ": [    ] ")
       end
     end

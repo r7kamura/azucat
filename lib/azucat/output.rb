@@ -18,8 +18,9 @@ module Azucat
 
     def puts(obj)
       return if obj.blank?
-      str = uniform(obj)
+      return puts_multi(obj) if obj.class == Array
 
+      str = uniform(obj)
       uncolored = ::Term::ANSIColor.uncolored(str).strip
       notify(
         :filtered => uncolored,
@@ -28,6 +29,10 @@ module Azucat
       )
       STDOUT.puts(unhtmlize(str))
       Azucat.config.channel << htmlize(str)
+    end
+
+    def error(e)
+      puts(:text => "#{e.class} - #{e.message}")
     end
 
     def colorize(str)
@@ -78,6 +83,13 @@ module Azucat
       str = obj.class == Hash ?
         stringify(obj) : obj.to_s
       str.gsub("\n", "")
+    end
+
+    def puts_multi(lines)
+      size = lines.size
+      lines.reverse.each_with_index do |line, i|
+        Output.puts(:tag => size - i, :text => line)
+      end
     end
   end
 end
