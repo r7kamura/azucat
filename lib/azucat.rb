@@ -1,5 +1,4 @@
 require "socket"
-require "kconv"
 require "logger"
 
 begin
