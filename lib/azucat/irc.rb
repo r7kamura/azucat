@@ -1,24 +1,20 @@
-module Azucat::IRC
-  require "azucat/irc/pattern"
-  require "azucat/irc/client"
-  require "azucat/irc/message"
-
-  extend self
-
-  Azucat.init do |opts|
-    next unless Azucat.config.irc
-    Azucat::Output.notify do |filtered|
-      filtered.match(config.irc.username)
-    end
+module Azucat
+  init do
+    next unless config.irc
+    Output.notify { |str| str.match(config.irc.username) }
   end
 
-  def run
-    return unless Azucat.config.irc
+  module IRC
+    require "azucat/irc/pattern"
+    require "azucat/irc/client"
+    require "azucat/irc/message"
+    extend self
 
-    client = Client.new(Azucat.config.irc)
-    client.on_message do |msg|
-      Azucat::Output.puts msg
+    def run
+      return unless Azucat.config.irc
+      client = Client.new(Azucat.config.irc)
+      client.on_message { |msg| Output.puts msg.to_hash }
+      client.start
     end
-    client.start
   end
 end

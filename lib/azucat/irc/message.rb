@@ -46,5 +46,13 @@ module Azucat::IRC
         :text => @params.join
       )
     end
+
+    def to_hash
+      {
+        :name => (@prefix || "").split("!").first,
+        :tag  => @command,
+        :text => @params.join
+      }
+    end
   end
 end
