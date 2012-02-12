@@ -58,15 +58,14 @@ describe Azucat::Twitter do
   end
 
   describe "commands" do
-    describe "tweet command" do
-      before do
-        Azucat::Command.stub(:output)
-      end
+    before do
+      Azucat::Command.stub(:output)
+    end
 
-      it "do tweet" do
-        Azucat::Twitter.should_receive(:tweet) do |args|
-          args.should == "foo"
-        end
+    describe "t|tweet <params>" do
+      it "should tweet <params>" do
+        @self.should_receive(:tweet).with("foo").exactly(2).times
+        Azucat::Command.input("t foo")
         Azucat::Command.input("tweet foo")
       end
     end

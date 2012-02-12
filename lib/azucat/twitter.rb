@@ -13,7 +13,7 @@ module Azucat
       end
 
       Notify.register(?@ + @info["screen_name"])
-      Command.register(/^tweet (.+)/) { |m| tweet(m[1]) }
+      Command.register(/^(?:t|tweet) (.+)/) { |m| tweet(m[1]) }
     end
 
 
