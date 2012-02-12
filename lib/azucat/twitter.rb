@@ -16,7 +16,6 @@ module Azucat
       Command.register(/^(?:t|tweet) (.+)/) { |m| tweet(m[1]) }
     end
 
-
     def run
       return unless Azucat.config.twitter
       recent

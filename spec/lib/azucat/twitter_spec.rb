@@ -22,15 +22,15 @@ describe Azucat::Twitter do
     context "when no twitter access key exists" do
       before do
         @origin_access_key = Azucat.config.access_key
-        Azucat.config.access_key = nil
-        @self.should_receive(:get_access_token)
+        @self.stub(:get_access_token)
       end
-
       after do
         Azucat.config.access_key = @origin_access_key
       end
 
       it "get access token" do
+        Azucat.config.access_key = nil
+        @self.should_receive(:get_access_token)
         @self.send(:setup_config)
       end
     end
@@ -50,10 +50,13 @@ describe Azucat::Twitter do
       }.should be_all
     end
 
-    it "register notify filter using one's screen_name" do
-      Notify.should_receive(:notify)
-      screen_name = @self.instance_variable_get(:@info)["screen_name"]
-      Azucat::Notify.notify(:filtered => ?@ + screen_name)
+    context "when receive tweet that includes one's screen name" do
+      let(:tweet) { ?@ + @self.instance_variable_get(:@info)["screen_name"] }
+
+      it "should notify the tweet" do
+        Notify.should_receive(:notify)
+        Azucat::Notify.notify(:filtered => tweet)
+      end
     end
   end
 
