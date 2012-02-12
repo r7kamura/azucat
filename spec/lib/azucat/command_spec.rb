@@ -10,7 +10,7 @@ describe Azucat::Command do
       Azucat::Command.stub(:output)
     end
 
-    it "register command and respond only to matched input" do
+    it "register command and respond to only matched input" do
       flag = false
       @self.register(/foo/) { flag = true }
 
@@ -24,14 +24,24 @@ describe Azucat::Command do
 
   describe "commands" do
     before do
-      Azucat::Command.stub(:output)
+      Azucat::Output.stub(:puts)
     end
 
-    it "tweet" do
-      Azucat::Twitter.should_receive(:tweet) do |args|
-        args.should == "foo"
+    describe "help" do
+      it "read README.md" do
+        File.should_receive(:read) do |args|
+          args.should match(/README\.md/)
+          args
+        end
+        @self.input("help")
       end
-      Azucat::Command.input("tweet foo")
+    end
+
+    describe "> " do
+      it "eval input" do
+        @self.should_receive(:eval)
+        @self.input("> true")
+      end
     end
   end
 end

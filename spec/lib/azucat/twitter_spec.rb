@@ -56,4 +56,19 @@ describe Azucat::Twitter do
       Azucat::Output.notify(:filtered => "@" + screen_name)
     end
   end
+
+  describe "commands" do
+    describe "tweet command" do
+      before do
+        Azucat::Command.stub(:output)
+      end
+
+      it "do tweet" do
+        Azucat::Twitter.should_receive(:tweet) do |args|
+          args.should == "foo"
+        end
+        Azucat::Command.input("tweet foo")
+      end
+    end
+  end
 end
