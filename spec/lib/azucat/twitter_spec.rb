@@ -11,14 +11,14 @@ describe Azucat::Twitter do
     pending("can not access to the Internet") unless Azucat.config.twitter
   end
 
-  describe "#recent" do
+  describe ".recent" do
     it "return recent tweets" do
       Azucat::Output.should_receive(:puts).at_least(:once)
       @self.recent
     end
   end
 
-  describe "#setup_config" do
+  describe ".setup_config" do
     context "when no twitter access key exists" do
       before do
         @origin_access_key = Azucat.config.access_key
