@@ -8,10 +8,8 @@ module Azucat
     end
 
     def register(pattern, &block)
-      commands << {
-        :pattern => pattern,
-        :proc    => block
-      }
+      return if commands.any? { |c| c[:pattern] == pattern }
+      commands << { :pattern => pattern, :proc => block }
     end
 
     private
@@ -34,6 +32,18 @@ module Azucat
           command[:proc].call(m)
         end
       end
+    rescue Exception => e
+      Output.error(e)
+    end
+
+    def lines_by_ap(obj)
+      result = obj.ai(:plain => true, :indent => 2)
+      lines  = str.split(/\n|\\n/)
+      if lines.first.match(/^\"/) and lines.last.match(/^\"$/)
+        lines.first.gsub!(/^\"/, "")
+        lines.pop
+      end
+      lines
     end
 
     register /^help$/ do
@@ -43,16 +53,7 @@ module Azucat
     end
 
     register /^> (.+)/ do |m|
-      begin
-        lines = eval(m[1]).ai(:plain => true, :indent => 2).split(/\n|\\n/)
-        if lines.first.match(/^\"/) and lines.last.match(/^\"$/)
-          lines.first.gsub!(/^\"/, "")
-          lines.pop
-        end
-        Output.puts(lines)
-      rescue Exception => e
-        Output.error(e)
-      end
+      Output.puts(lines_by_ap(eval m[1]))
     end
   end
 end

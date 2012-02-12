@@ -21,18 +21,13 @@ module Azucat
       return puts_multi(obj) if obj.class == Array
 
       str = uniform(obj)
-      uncolored = ::Term::ANSIColor.uncolored(str).strip
-      notify(
-        :filtered => uncolored,
-        :title    => uncolored.split(": ", 2)[0],
-        :message  => uncolored.split(": ", 2)[1]
-      )
+      notify_by_colored_str(str)
       STDOUT.puts(unhtmlize(str))
       Azucat.config.channel << htmlize(str)
     end
 
     def error(e)
-      puts(:text => "#{e.class} - #{e.message}")
+      self.puts(:text => "#{e.class} - #{e.message}")
     end
 
     def colorize(str)
@@ -41,26 +36,33 @@ module Azucat
       "\e\[#{code}m#{str}\e\[0m"
     end
 
-    def stringify(hash)
-      name = colorize("%14.14s" % hash[:name])
-      tag  = "%4.4s" % hash[:tag]
-      text = hash[:text]
-      "#{name}: [#{tag}] #{text}"
-    end
-
-    def notify(args = {}, &block)
-      @notify_filters ||= []
-
-      if block
-        @notify_filters << block
-      else
-        if @notify_filters.map { |proc| proc.call(args[:filtered]) }.any?
-          Notify.notify args[:title], args[:message]
-        end
+    def notify(args = {})
+      if args.class == Regexp || args.class == String
+        notify_filters << args unless notify_filters.include?(args)
+      elsif match_any_filter?(args[:filtered])
+        Notify.notify args[:title], args[:message]
       end
     end
 
     private
+
+    def notify_by_colored_str(str)
+      uncolored = ::Term::ANSIColor.uncolored(str).strip
+      notify(
+        :filtered => uncolored,
+        :title    => uncolored.split(": ", 2)[0],
+        :message  => uncolored.split(": ", 2)[1]
+      )
+    end
+
+    def notify_filters
+      @notify_filters ||= []
+    end
+
+    def match_any_filter?(filtered)
+      notify_filters.any? { |filter| filtered.match(filter) }
+    end
+
     def htmlize(str)
       result = str.gsub(/(#{Regexp.union(ENTITY_MAP.keys)})/o, ENTITY_MAP)
       result.gsub(/(?:\e\[([0-9;]*)m)/) do
@@ -80,9 +82,8 @@ module Azucat
     end
 
     def uniform(obj)
-      str = obj.class == Hash ?
-        stringify(obj) : obj.to_s
-      str.gsub("\n", "")
+      str = (obj.class == Hash) ? stringify(obj) : obj.to_s
+      str.gsub("\n", " ")
     end
 
     def puts_multi(lines)
@@ -90,6 +91,13 @@ module Azucat
       lines.reverse.each_with_index do |line, i|
         Output.puts(:tag => size - i, :text => line)
       end
+    end
+
+    def stringify(hash)
+      name = colorize("%14.14s" % hash[:name])
+      tag  = "%4.4s" % hash[:tag]
+      text = hash[:text]
+      "#{name}: [#{tag}] #{text}"
     end
   end
 end

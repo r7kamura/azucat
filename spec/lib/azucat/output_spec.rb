@@ -105,13 +105,13 @@ describe Azucat::Output do
           hash[:tag],
           hash[:text]
         ]
-        @self.stringify(hash).should == expected
+        @self.send(:stringify, hash).should == expected
       end
     end
 
     context "when passed empty hash" do
       it "convert hash to string in the form of `    : [    ]`" do
-        @self.stringify({}).should == (" " * 14 + ": [    ] ")
+        @self.send(:stringify, {}).should == (" " * 14 + ": [    ] ")
       end
     end
   end
@@ -142,11 +142,11 @@ describe Azucat::Output do
 
   describe "#uniform" do
     it "stringify hash" do
-      @self.send(:uniform, {}).should == @self.stringify({})
+      @self.send(:uniform, {}).should == @self.send(:stringify, {})
     end
 
     it "remove linebreaks" do
-      @self.send(:uniform, "foo\n").should == "foo"
+      @self.send(:uniform, "foo\nbar").should == "foo bar"
     end
   end
 end

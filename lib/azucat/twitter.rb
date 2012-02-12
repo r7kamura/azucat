@@ -11,12 +11,11 @@ module Azucat
         Azucat.config.twitter = false
         next
       end
-      Azucat::Output.notify { |str| str.match("@" + @info["screen_name"]) }
+
+      Notify.register(?@ + @info["screen_name"])
+      Command.register(/^tweet (.+)/) { |m| tweet(m[1]) }
     end
 
-    Azucat::Command.register /^tweet (.+)/ do |m|
-      tweet(m[1])
-    end
 
     def run
       return unless Azucat.config.twitter

@@ -39,14 +39,6 @@ module Azucat::IRC
       @params  = args[:params]
     end
 
-    def to_s
-      Azucat::Output.stringify(
-        :name => (@prefix || "").split("!").first,
-        :tag  => @command,
-        :text => @params.join
-      )
-    end
-
     def to_hash
       {
         :name => (@prefix || "").split("!").first,

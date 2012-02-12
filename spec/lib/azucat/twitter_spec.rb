@@ -53,7 +53,7 @@ describe Azucat::Twitter do
     it "register notify filter using one's screen_name" do
       Notify.should_receive(:notify)
       screen_name = @self.instance_variable_get(:@info)["screen_name"]
-      Azucat::Output.notify(:filtered => "@" + screen_name)
+      Azucat::Notify.notify(:filtered => ?@ + screen_name)
     end
   end
 

@@ -1,7 +1,7 @@
 module Azucat
   init do
     next unless config.irc
-    Output.notify { |str| str.match(config.irc.username) }
+    Notify.register config.irc.username
   end
 
   module IRC

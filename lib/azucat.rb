@@ -17,6 +17,7 @@ module Azucat
   extend Core
 
   require "azucat/ext"
+  require "azucat/notify"
   require "azucat/command"
   require "azucat/http_server"
   require "azucat/websocket_server"
