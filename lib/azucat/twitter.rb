@@ -5,7 +5,12 @@ module Azucat
     Azucat.init do
       next unless Azucat.config.twitter
       setup_config
-      setup_client_and_info
+      begin
+        setup_client_and_info
+      rescue SocketError
+        Azucat.config.twitter = false
+        next
+      end
       Azucat::Output.notify { |str| str.match("@" + @info["screen_name"]) }
     end
 

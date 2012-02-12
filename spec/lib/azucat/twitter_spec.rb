@@ -6,7 +6,9 @@ describe Azucat::Twitter do
 
     Azucat.send(:configure, :twitter => true)
     pending("no twitter access key given") unless Azucat.config.access_key
+
     Azucat.send(:init)
+    pending("can not access to the Internet") unless Azucat.config.twitter
   end
 
   describe "#recent" do
