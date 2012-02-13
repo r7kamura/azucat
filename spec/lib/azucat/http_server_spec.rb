@@ -61,6 +61,8 @@ describe Azucat::HTTPServer do
     end
 
     describe "POST /" do
+      before { Azucat::Command.stub(:input) }
+
       describe "access" do
         before  { post "/" }
         subject { last_response }
