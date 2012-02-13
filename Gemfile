@@ -27,4 +27,5 @@ group :test do
   gem "rspec"
   gem "guard-rspec"
   gem "growl"
+  gem "rack-test", :require => "rack/test"
 end

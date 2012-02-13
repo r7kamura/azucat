@@ -5,7 +5,7 @@ describe Azucat::HTTPServer do
     @self = Azucat::HTTPServer
   end
 
-  describe "#open_browser" do
+  describe ".open_browser" do
     context "normally" do
       before do
         Azucat.send(:configure)
@@ -27,12 +27,60 @@ describe Azucat::HTTPServer do
         expect { @self.send(:open_browser) }.not_to raise_error
       end
     end
+
+    context "when Azucat.config.open_browser is false" do
+      before { Azucat.config.open_browser = false }
+      after  { Azucat.config.open_browser = true  }
+      it "do nothing" do
+        ::Launchy.should_not_receive(:open)
+        @self.send(:open_browser)
+      end
+    end
   end
 
-  describe "#run" do
+  describe ".run" do
     it "launch HTTP server and open browser" do
       @self.should_receive(:open_browser) { raise SystemExit }
       expect { @self.run }.to raise_error SystemExit
+    end
+  end
+
+  describe "Sinatra::Base" do
+    include Rack::Test::Methods
+    def app
+      Azucat::HTTPServer::App
+    end
+
+    describe "GET /" do
+      before  { get "/" }
+      subject { last_response }
+      it { should be_ok }
+      it "should include configured WebSocket port" do
+        should match(Azucat.config.ws_port.to_s)
+      end
+    end
+
+    describe "POST /" do
+      describe "access" do
+        before  { post "/" }
+        subject { last_response }
+        it { should be_ok }
+      end
+
+      context "when passed params[:command]" do
+        it "should pass it to Command.input" do
+          input = "foo"
+          Azucat::Command.should_receive(:input).with(input)
+          post "/", :command => input
+        end
+      end
+
+      context "when not passed params[:command]" do
+        it "should do nothing" do
+          Azucat::Command.should_not_receive(:input)
+          post "/"
+        end
+      end
     end
   end
 end
