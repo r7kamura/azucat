@@ -6,7 +6,7 @@ describe Azucat::Command do
     Azucat::Output.stub(:puts)
   end
 
-  describe "#register and #input" do
+  describe ".register and .input" do
     it "register command and respond to only matched input" do
       flag = false
       @self.register(/foo/) { flag = true }
@@ -16,7 +16,7 @@ describe Azucat::Command do
   end
 
   describe "commands" do
-    describe "> " do
+    describe ">" do
       it "eval input" do
         @self.should_receive(:eval)
         @self.input("> true")
@@ -25,6 +25,25 @@ describe Azucat::Command do
       it "output error when raised" do
         Azucat::Output.should_receive(:error)
         @self.input("> foo")
+      end
+    end
+
+    describe "help" do
+      it "should show information about commands" do
+        Azucat::Output.should_receive(:puts).at_least(3).times
+        @self.input("help")
+      end
+
+      describe ".pretty_help" do
+        subject { @self.send(:pretty_help).join }
+
+        describe "about command help" do
+          it { should match(/help - show help about commands/) }
+        end
+
+        describe "about command >" do
+          it { should match(/> <param> - eval <param> as Ruby command/) }
+        end
       end
     end
   end

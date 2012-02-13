@@ -44,11 +44,7 @@ module Azucat
     end
 
     def exec_commands(str)
-      commands.each do |command|
-        if m = str.match(command[:pattern])
-          command[:proc].call(m)
-        end
-      end
+      commands.each { |c| m = str.match(c[:pattern]) and c[:proc].call(m) }
     rescue Exception => e
       Output.error(e)
     end
@@ -63,28 +59,36 @@ module Azucat
       lines
     end
 
-    register :help, "show help about commands" do
-      explainables = []
-      commands.each do |command|
-        next unless command[:name]
-        explainables << {
-          :form => command[:name] + " <param>" * command[:arity],
-          :help => command[:help]
-        }
-      end
-      max   = explainables.map { |e| e[:form].length }.max
-      lines = explainables.map do |e|
-        line  = "%#{max}.#{max}s" % e[:form]
-        line += " - #{e[:help]}" if e[:help]
-        line
-      end
+    def explainable_commands
+      commands.select { |c| c[:name] }
+    end
+
+    def form_and_help(command)
+      {
+        :form => command[:name] + " <param>" * command[:arity],
+        :help => command[:help]
+      }
+    end
+
+    def pretty_help
+      commands = explainable_commands.map(&method(:form_and_help))
+      max      = commands.map { |c| c[:form].length }.max
+      commands.map { |c|
+        ["%#{max}.#{max}s" % c[:form], c[:help]].compact.join(" - ")
+      }
+    end
+
+    def output_pretty_help
       Output.puts(:name => "-" * 12, :tag => "-" * 4, :text => "-" * 70)
-      Output.puts(lines)
+      Output.puts(pretty_help)
       Output.puts(:name => "-" * 12, :tag => "-" * 4, :text => "-" * 70)
     end
 
-    register :>, "eval <param>" do |m|
-      Output.puts(lines_by_ap(eval m[1]))
+    def output_eval(input)
+      Output.puts(lines_by_ap(eval input))
     end
+
+    register(:help, "show help about commands") { output_pretty_help }
+    register(:>, "eval <param> as Ruby command") { |m| output_eval(m[1]) }
   end
 end
