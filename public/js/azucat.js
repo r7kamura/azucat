@@ -51,11 +51,11 @@ var Azucat = {
 
   updateUnreadCounter: function(count) {
     Tinycon.setBubble(count);
-    this.count = count;
+    this.unreadCount = count;
   },
 
   countupUnreadCounter: function() {
-    this.updateUnreadCounter(this.unreadCount + 1);
+    this.updateUnreadCounter(++this.unreadCount);
   },
 
   focusFirstForm: function() {
