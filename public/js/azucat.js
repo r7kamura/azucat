@@ -6,7 +6,7 @@
 * */
 var Azucat = {
   container: undefined,
-
+  onMessage: [],
   unreadCount: 0,
 
   start: function(port) {
@@ -14,6 +14,7 @@ var Azucat = {
     $(function() {
       self.init({ container: $('#timeline') });
       self.setupWebSocket(port);
+      self.setupWebSocketOnMessage();
       self.setupAjaxForm();
       self.setupUnreadCounter();
       self.focusFirstForm();
@@ -28,6 +29,7 @@ var Azucat = {
     var self = this;
     $(window).keydown(function() { self.updateUnreadCounter(0) })
       .keydown();
+    this.onMessage.push(function() { self.countupUnreadCounter() });
   },
 
   setupAjaxForm: function() {
@@ -43,10 +45,14 @@ var Azucat = {
     var self = this;
     var ws = new WebSocket('ws://localhost:' + port);
     ws.onmessage = function(e) {
-      self.countupUnreadCounter();
-      self.updateTitle(e.data);
-      self.prependToBody(e.data);
+      $.each(self.onMessage, function() { this(e) });
     };
+  },
+
+  setupWebSocketOnMessage: function() {
+    var self = this;
+    this.onMessage.push(function(e) { self.updateTitle(e.data) });
+    this.onMessage.push(function(e) { self.prependToBody(e.data) });
   },
 
   updateUnreadCounter: function(count) {
