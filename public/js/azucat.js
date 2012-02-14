@@ -7,18 +7,27 @@
 var Azucat = {
   container: undefined,
 
+  unreadCount: 0,
+
   start: function(port) {
     var self = this;
     $(function() {
       self.init({ container: $('#timeline') });
       self.setupWebSocket(port);
       self.setupAjaxForm();
+      self.setupUnreadCounter();
       self.focusFirstForm();
     });
   },
 
   init: function(args) {
     this.container = args.container;
+  },
+
+  setupUnreadCounter: function() {
+    var self = this;
+    $(window).keydown(function() { self.updateUnreadCounter(0) })
+      .keydown();
   },
 
   setupAjaxForm: function() {
@@ -34,9 +43,19 @@ var Azucat = {
     var self = this;
     var ws = new WebSocket('ws://localhost:' + port);
     ws.onmessage = function(e) {
+      self.countupUnreadCounter();
       self.updateTitle(e.data);
       self.prependToBody(e.data);
     };
+  },
+
+  updateUnreadCounter: function(count) {
+    Tinycon.setBubble(count);
+    this.count = count;
+  },
+
+  countupUnreadCounter: function() {
+    this.updateUnreadCounter(this.unreadCount + 1);
   },
 
   focusFirstForm: function() {

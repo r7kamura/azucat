@@ -60,6 +60,12 @@ describe Azucat::HTTPServer do
       end
     end
 
+    describe "GET /favicon.ico" do
+      before  { get "/favicon.ico" }
+      subject { last_response }
+      it { should be_ok }
+    end
+
     describe "POST /" do
       before { Azucat::Command.stub(:input) }
 
