@@ -68,13 +68,13 @@ var Azucat = {
     $('input').eq(0).focus();
   },
 
-  addLink: function(str) {
+  convertToLink: function(str) {
     return str.replace(
       /(https?:\/\/[\x21-\x7e]+)/gi, '<a href="$1" target="_blank">$1</a>');
   },
 
   prependToBody: function(str) {
-    str = this.addLink(str);
+    str = this.convertToLink(str);
     dom = $('<pre/>').append(str);
     this.container.prepend(dom);
   },
