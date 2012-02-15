@@ -35,24 +35,25 @@ module Azucat::IRC
       block ?
         @on_message = block :
         @on_message.call(*args)
-      self
     end
 
     def start(&block)
       while str = @socket.gets
-        msg = Message.parse(str)
-
-        case msg.command
-        when "PING"
-          pong(str)
-        when "PONG"
-        when *%w[JOIN KICK MODE NOTICE TOPIC PRIVMSG]
-          on_message(msg)
-        end
+        on_receive(str)
       end
     end
 
     private
+
+    def on_receive(str)
+      msg = Message.parse(str)
+      case msg.command
+      when "PING"
+        pong(str)
+      when *%w[JOIN KICK MODE NOTICE TOPIC PRIVMSG]
+        on_message(msg)
+      end
+    end
 
     def connect
       @socket = TCPSocket.new(@server, @port)
