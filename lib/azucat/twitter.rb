@@ -6,10 +6,11 @@ module Azucat
 
     Azucat.init do
       next unless Azucat.config.twitter
-      setup_config
+
       begin
+        setup_config
         setup_client_and_info
-      rescue SocketError
+      rescue SocketError, Errno::ECONNREFUSED
         Azucat.config.twitter = false
         next
       end
@@ -77,7 +78,7 @@ module Azucat
       stream.on_reconnect      {        Output.puts "Reconnect"          }
       stream.on_max_reconnects {        Output.puts "Failed"             }
     rescue EventMachine::ConnectionError => e
-      Output.puts("[ERROR] (#{self}) #{e.message}")
+      Output.error(e)
     end
 
     def get_access_token
