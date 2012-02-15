@@ -10,8 +10,6 @@ module Azucat::IRC
       @channel      = attr[:channel]
       @password     = attr[:password]
       @eol          = attr[:eol] || "\r\n"
-      @logger       = attr[:logger] || ::Logger.new(STDOUT)
-      @logger.level = ::Logger::INFO
       @is_connected = false
 
       connect
@@ -61,7 +59,6 @@ module Azucat::IRC
     end
 
     def command(msg)
-      @logger.debug("[#{Time.now}] Command: #{msg}")
       @socket.write(msg + @eol)
     end
 
