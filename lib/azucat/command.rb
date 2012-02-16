@@ -85,10 +85,11 @@ module Azucat
     end
 
     def output_eval(input)
-      Output.puts(lines_by_ap(eval input))
+      Output.puts(lines_by_ap(input))
     end
 
     register(:help, "show help about commands") { output_pretty_help }
-    register(:>, "eval <param> as Ruby command") { |m| output_eval(m[1]) }
+    register(:ruby, "eval <param> as Ruby command") { |m| output_eval(eval m[1]) }
+    register(:>,    "eval <param> as Shell command") { |m| output_eval `#{m[1]}` }
   end
 end

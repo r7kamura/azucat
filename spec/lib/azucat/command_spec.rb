@@ -19,12 +19,12 @@ describe Azucat::Command do
     describe ">" do
       it "eval input" do
         @self.should_receive(:eval)
-        @self.input("> true")
+        @self.input("ruby true")
       end
 
       it "output error when raised" do
         Azucat::Output.should_receive(:error)
-        @self.input("> foo")
+        @self.input("ruby foo")
       end
     end
 
@@ -41,8 +41,12 @@ describe Azucat::Command do
           it { should match(/help - show help about commands/) }
         end
 
+        describe "about command ruby" do
+          it { should match(/ruby <param> - eval <param> as Ruby command/) }
+        end
+
         describe "about command >" do
-          it { should match(/> <param> - eval <param> as Ruby command/) }
+          it { should match(/> <param> - eval <param> as Shell command/) }
         end
       end
     end
