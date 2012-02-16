@@ -56,7 +56,7 @@ module Azucat
           @used_skype_messages[msg_id] = true
         end
       end
-      messages.sort_by! { |msg| -msg[:timestamp].to_i }
+      messages.sort_by! { |msg| msg[:timestamp] }
     end
 
     def message(id)
