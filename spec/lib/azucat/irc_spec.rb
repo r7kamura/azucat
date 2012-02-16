@@ -15,27 +15,5 @@ describe Azucat::IRC do
         @self.run
       end
     end
-
-    context "when config.irc is configured" do
-      before do
-        Azucat.config.irc = {
-          :server   => "irc.freenode.net",
-          :port     => 6667,
-          :channel  => "#azucat",
-          :username => "azucat"
-        }
-        Azucat::Output.stub(:error)
-        @self.client.stub(:start)
-      end
-      it "create and start Azucat::IRC::Client" do
-        begin
-          @self::Client.new(Azucat.config.irc)
-          @self.client.should_receive(:start)
-          @self.run
-        rescue SocketError
-          pending "can't connect to server"
-        end
-      end
-    end
   end
 end

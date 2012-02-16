@@ -10,16 +10,16 @@ module Azucat
     require "azucat/irc/message"
     extend self
 
-    def client
-      @client ||= Client.new(Azucat.config.irc)
-    end
-
     def run
       return unless Azucat.config.irc
-      @client.on_message { |msg| Output.puts msg.to_hash }
-      @client.start
+      client.on_message { |msg| Output.puts msg }
+      client.start
     rescue SocketError => e
       Output.error(e)
+    end
+
+    def client
+      @client ||= Client.new(Azucat.config.irc)
     end
   end
 end
