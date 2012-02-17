@@ -8,7 +8,7 @@ module Azucat::IRC
       raise InvalidMessage unless all
 
       {
-        :name => prefix.split("!").first,
+        :name => (prefix || "").split("!").first,
         :tag  => command,
         :text => convert_to_params(rest).join(" ")
       }

@@ -47,7 +47,7 @@ module Azucat::IRC
 
     def on_receive(str)
       msg = Message.parse(str)
-      case msg.command
+      case msg[:command]
       when "PING"
         pong(str)
       when *%w[JOIN KICK MODE NOTICE TOPIC PRIVMSG]

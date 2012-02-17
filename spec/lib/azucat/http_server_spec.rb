@@ -38,10 +38,20 @@ describe Azucat::HTTPServer do
     end
   end
 
-  describe ".run" do
+  describe "run" do
+    before do
+      @open_browser = Azucat.config.open_browser
+      Azucat.config.open_browser = true
+    end
+
+    after do
+      Azucat.config.open_browser = @open_browser
+    end
+
     it "launch HTTP server and open browser" do
-      @self.should_receive(:open_browser) { raise SystemExit }
-      expect { @self.run }.to raise_error SystemExit
+      ::Rack::Handler.default.should_receive(:run)
+      Azucat.run { Azucat.stop }
+      Azucat.run
     end
   end
 

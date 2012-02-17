@@ -131,7 +131,7 @@ module Azucat
   end
 
   run do
-    return unless config.twitter
+    next unless config.twitter
     Twitter.recent
     Twitter.start_stream
   end

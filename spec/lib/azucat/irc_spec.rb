@@ -11,8 +11,15 @@ describe Azucat::IRC do
         Azucat.config.irc = false
       end
       it "do nothing" do
-        @self::Client.should_not_receive(:new)
-        @self.run
+        @self.should_not_receive(:setup_client)
+        Azucat.run { Azucat.stop }
+        Azucat.run
+      end
+    end
+
+    context "when config.irc is passed" do
+      before do
+        Azucat.config
       end
     end
   end

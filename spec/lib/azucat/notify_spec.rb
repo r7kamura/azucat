@@ -26,6 +26,13 @@ describe Azucat::Notify do
 
   describe ".register" do
     context "when passed args that already exists" do
+      before do
+        @filters = @self.instance_variable_get(:@filters)
+        @self.instance_variable_set(:@filters, [])
+      end
+      after do
+        @self.instance_variable_set(:@filters, @filters)
+      end
       it "does not registered redundantly" do
         2.times { @self.register /foo/ }
         @self.instance_variable_get(:@filters).should have(1).filters

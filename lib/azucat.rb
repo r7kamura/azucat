@@ -17,14 +17,14 @@ module Azucat
   extend Core
 
   require "azucat/ext"
-  #require "azucat/notify"
+  require "azucat/notify"
   require "azucat/command"
   require "azucat/output"
   require "azucat/http_server"
   require "azucat/websocket_server"
-  #require "azucat/input"
+  require "azucat/input"
   require "azucat/twitter"
-  #require "azucat/irc"
-  #require "azucat/skype"
-  #require "azucat/manager"
+  require "azucat/irc"
+  require "azucat/skype"
+  require "azucat/manager"
 end

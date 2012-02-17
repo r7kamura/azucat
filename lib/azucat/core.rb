@@ -1,11 +1,11 @@
 module Azucat
   module Core
-    def run(opts = {}, &block)
+    def run(&block)
       @runs ||= []
       if block
         @runs << block
       else
-        configure(opts)
+        configure
         init
         care_thread
         run_threads

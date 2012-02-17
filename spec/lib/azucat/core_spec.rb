@@ -17,18 +17,21 @@ describe Azucat::Core do
   end
 
   describe "#run" do
-    it "configure options and run sub classed" do
-      [
-        Azucat::HTTPServer,
-        Azucat::WebSocketServer,
-        Azucat::Input,
-        Azucat::Twitter,
-        Azucat::IRC,
-        Azucat::Skype
-      ].each { |klass| klass.should_receive(:run) }
-      Azucat::Manager.send(:define_method, :run, proc { Azucat.stop })
-      Azucat.run(:foo => "foo")
-      Azucat.config.run
+    before do
+      @runs = Azucat.send(:instance_variable_get, :@runs)
+      Azucat.send(:instance_variable_set, :@runs, [])
+    end
+
+    after do
+      Azucat.send(:instance_variable_set, :@runs, @runs)
+    end
+
+    it "register block and call it" do
+      r = proc {}
+      Azucat.run(&r)
+      Azucat.run { Azucat.stop }
+      r.should_receive(:call)
+      Azucat.run
     end
   end
 
@@ -61,21 +64,6 @@ describe Azucat::Core do
         Azucat.send(:configure, :file => @path)
         Azucat.config.test_flag.should be_true
       end
-    end
-  end
-
-  describe "#run_threads" do
-    it "let classes to call .run method" do
-      [
-        Azucat::HTTPServer,
-        Azucat::WebSocketServer,
-        Azucat::Input,
-        Azucat::Twitter,
-        Azucat::IRC,
-        Azucat::Skype
-      ].each { |klass| klass.should_receive(:run) }
-      Azucat::Manager.send(:define_method, :run, proc { Azucat.stop })
-      Azucat.send(:run_threads)
     end
   end
 

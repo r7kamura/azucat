@@ -2,6 +2,8 @@ module Azucat
   module Skype
     extend self
 
+    attr_accessor :start_time
+
     POLLING_SEC = 30
 
     Azucat.init do
@@ -36,7 +38,7 @@ module Azucat
         recent_message_ids(chat_id).each do |msg_id|
           next if @used_skype_messages[msg_id]
           msg = message(msg_id)
-          messages << msg if msg[:time] >= @start_time
+          messages << msg if msg[:time] >= start_time
           @used_skype_messages[msg_id] = true
         end
       end
@@ -71,16 +73,16 @@ module Azucat
 
   run do
     if !config.skype || !RUBY_PLATFORM.downcase.include?("darwin")
-      return
+      next
     end
 
-    @start_time = Time.now
+    Skype::start_time = Time.now
     loop do
       start      = Time.now
-      messages   = gets
+      messages   = Skype.gets
       finish     = Time.now
 
-      sleep_time = POLLING_SEC - (finish - start)
+      sleep_time = Skype::POLLING_SEC - (finish - start)
       sleep sleep_time if sleep_time > 0
     end
   end
