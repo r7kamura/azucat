@@ -9,15 +9,21 @@ var Azucat = {
   onMessage: [],
   unreadCount: 0,
 
-  start: function(port) {
+  start: function(port, opts) {
+    opts = $.extend({
+      audio:   true,
+      counter: true
+    }, opts);
+
     var self = this;
     $(function() {
       self.init({ container: $('#timeline') });
       self.setupWebSocket(port);
       self.setupWebSocketOnMessage();
       self.setupAjaxForm();
-      self.setupUnreadCounter();
       self.focusFirstForm();
+      opts.counter && self.setupUnreadCounter();
+      opts.audio   && self.setupAudio();
     });
   },
 
@@ -93,5 +99,26 @@ var Azucat = {
 
   removeTags: function(str) {
     return str.replace(/<.*?>/g, '');
+  },
+
+  setupAudio: function() {
+    var self = this;
+    this.setupAudioQueue({ size: 3, path: "/sounds/on-message.mp3" });
+    this.onMessage.push(function() {
+      self.rotateAudioQueue(function(audio) { audio.play() });
+    });
+  },
+
+  setupAudioQueue: function(args) {
+    this.audioQueue = [];
+    for (var i = 0; i < args.size; i++) {
+      this.audioQueue.push(new Audio(args.path));
+    }
+  },
+
+  rotateAudioQueue: function(callback) {
+    var audio = this.audioQueue.shift();
+    callback(audio);
+    this.audioQueue.push(audio);
   }
 };
