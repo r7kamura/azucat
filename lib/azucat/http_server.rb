@@ -16,22 +16,20 @@ module Azucat
       end
     end
 
-    def run
-      ::Rack::Handler.default.run(App.new,
-        :Port          => Azucat.config.http_port,
-        :Logger        => ::WEBrick::Log.new("/dev/null"),
-        :AccessLog     => [nil, nil],
-        :StartCallback => proc { open_browser }
-      )
-    end
-
-    private
-
     def open_browser
       return unless Azucat.config.open_browser
       http_host   = Azucat.config.http_host
       http_port   = Azucat.config.http_port
       ::Launchy.open("http://#{http_host}:#{http_port}") rescue nil
     end
+  end
+
+  run do
+    ::Rack::Handler.default.run(HTTPServer::App.new,
+      :Port          => config.http_port,
+      :Logger        => ::WEBrick::Log.new("/dev/null"),
+      :AccessLog     => [nil, nil],
+      :StartCallback => proc { HTTPServer::open_browser }
+    )
   end
 end

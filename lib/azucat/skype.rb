@@ -19,22 +19,6 @@ module Azucat
       end
     end
 
-    def run
-      if !Azucat.config.skype || !RUBY_PLATFORM.downcase.include?("darwin")
-        return
-      end
-
-      @start_time = Time.now
-      loop do
-        start  = Time.now
-        messages = gets
-        finish = Time.now
-
-        sleep_time = POLLING_SEC - (finish - start)
-        sleep sleep_time if sleep_time > 0
-      end
-    end
-
     def on_message(msg = nil, &block)
       @on_messages ||= []
       block ?
@@ -82,6 +66,22 @@ module Azucat
 
     def skype(command)
       SkypeMac::Skype.send_(:command => command)
+    end
+  end
+
+  run do
+    if !config.skype || !RUBY_PLATFORM.downcase.include?("darwin")
+      return
+    end
+
+    @start_time = Time.now
+    loop do
+      start      = Time.now
+      messages   = gets
+      finish     = Time.now
+
+      sleep_time = POLLING_SEC - (finish - start)
+      sleep sleep_time if sleep_time > 0
     end
   end
 end

@@ -1,14 +1,15 @@
 module Azucat
   module Core
-    def run(opts = {})
-      configure(opts)
-      init
-      care_thread
-      run_threads
-    end
-
-    def stop
-      EM.stop_event_loop
+    def run(opts = {}, &block)
+      @runs ||= []
+      if block
+        @runs << block
+      else
+        configure(opts)
+        init
+        care_thread
+        run_threads
+      end
     end
 
     def init(&block)
@@ -32,7 +33,12 @@ module Azucat
       )
     end
 
+    def stop
+      EM.stop_event_loop
+    end
+
     private
+
     def configure(opts = {})
       config.merge!(opts)
       load_or_create_config_file
@@ -57,11 +63,8 @@ module Azucat
 
     def run_threads
       EM.run do
-        [
-          HTTPServer, WebSocketServer, Input,
-          Twitter, IRC, Skype, Manager
-        ].each do |klass|
-          EM.defer { klass.send(:run) }
+        @runs.each do |r|
+          EM.defer { r.call }
         end
       end
     end

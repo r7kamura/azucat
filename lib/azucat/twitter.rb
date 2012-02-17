@@ -23,10 +23,14 @@ module Azucat
       }
     end
 
-    def run
-      return unless Azucat.config.twitter
-      recent
-      start_stream
+    def start_stream
+      stream = ::Twitter::JSONStream.connect(@config)
+      stream.each_item         { |item| Output.puts parse_tweet(item)    }
+      stream.on_error          { |msg|  Output.puts "Error: #{msg}"      }
+      stream.on_reconnect      {        Output.puts "Reconnect"          }
+      stream.on_max_reconnects {        Output.puts "Failed"             }
+    rescue EventMachine::ConnectionError => e
+      Output.error(e)
     end
 
     def tweet(str)
@@ -69,16 +73,6 @@ module Azucat
         :secret          => @config[:oauth][:access_secret]
       )
       @info = @client.info
-    end
-
-    def start_stream
-      stream = ::Twitter::JSONStream.connect(@config)
-      stream.each_item         { |item| Output.puts parse_tweet(item)    }
-      stream.on_error          { |msg|  Output.puts "Error: #{msg}"      }
-      stream.on_reconnect      {        Output.puts "Reconnect"          }
-      stream.on_max_reconnects {        Output.puts "Failed"             }
-    rescue EventMachine::ConnectionError => e
-      Output.error(e)
     end
 
     def get_access_token
@@ -134,5 +128,11 @@ module Azucat
         :tag  => "TWIT"
       }
     end
+  end
+
+  run do
+    return unless config.twitter
+    Twitter.recent
+    Twitter.start_stream
   end
 end
