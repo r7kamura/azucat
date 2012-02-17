@@ -42,8 +42,8 @@ var Azucat = {
   },
 
   setupWebSocket: function(port) {
+    var ws   = this.createWebSocket('ws://localhost:' + port);
     var self = this;
-    var ws = new WebSocket('ws://localhost:' + port);
     ws.onmessage = function(e) {
       $.each(self.onMessage, function() { this(e) });
     };
@@ -53,6 +53,14 @@ var Azucat = {
     var self = this;
     this.onMessage.push(function(e) { self.updateTitle(e.data) });
     this.onMessage.push(function(e) { self.prependToBody(e.data) });
+  },
+
+  createWebSocket: function(url) {
+    if ("WebSocket" in window) {
+      return new WebSocket(url);
+    } else if ("MozWebSocket" in window) {
+      return new MozWebSocket(url);
+    }
   },
 
   updateUnreadCounter: function(count) {
