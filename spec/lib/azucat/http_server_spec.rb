@@ -49,6 +49,7 @@ describe Azucat::HTTPServer do
     end
 
     it "launch HTTP server and open browser" do
+      pending "@runs is clear"
       ::Rack::Handler.default.should_receive(:run)
       Azucat.run { Azucat.stop }
       Azucat.run

@@ -3,11 +3,15 @@ module Azucat
     extend self
 
     class App < ::Sinatra::Base
-      set :root, File.expand_path("../../../", __FILE__)
-      set :ws_port, Azucat.config.ws_port
+      set :root,       File.expand_path("../../../", __FILE__)
+      set :ws_port,    Azucat.config.ws_port
+      set :audio,      Azucat.config.audio
+      set :audio_path, Azucat.config.audio_path
 
       get "/" do
-        @ws_port = settings.ws_port
+        @ws_port    = settings.ws_port
+        @audio      = settings.audio
+        @audio_path = settings.audio_path
         erb :index
       end
 
@@ -25,11 +29,11 @@ module Azucat
   end
 
   run do
-    ::Rack::Handler.default.run(HTTPServer::App.new,
+    ::Rack::Handler::WEBrick.run(HTTPServer::App.new,
       :Port          => config.http_port,
       :Logger        => ::WEBrick::Log.new("/dev/null"),
       :AccessLog     => [nil, nil],
-      :StartCallback => proc { HTTPServer::open_browser }
+      :StartCallback => proc { HTTPServer.open_browser }
     )
   end
 end

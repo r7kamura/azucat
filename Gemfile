@@ -1,7 +1,9 @@
 source "http://rubygems.org"
 
+gem "eventmachine"                                          # Thread controll
 gem "em-websocket"                                          # WS server
 gem "sinatra", :require => "sinatra/base"                   # HTTP server
+gem "sinatra-reloader", :require => "sinatra/reloader"      # HTTP auto reload
 gem "launchy", "~> 2.0.5"                                   # Open Browser
 gem "term-ansicolor", :require => "term/ansicolor"          # ANSI to HTML
 gem "oauth"                                                 # Twitter
