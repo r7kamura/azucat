@@ -9,7 +9,13 @@ describe Azucat::IRC do
     context "when config.irc is false" do
       before do
         Azucat.config.irc = false
+        @runs = Azucat.instance_variable_get(:@runs)
+        Azucat.instance_variable_set(:@runs, [])
       end
+      after do
+        Azucat.instance_variable_set(:@runs, @runs)
+      end
+
       it "do nothing" do
         @self.should_not_receive(:setup_client)
         Azucat.run { Azucat.stop }
