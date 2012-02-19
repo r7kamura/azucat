@@ -8,7 +8,12 @@
   <script type="text/javascript" src="/js/jquery.min.js"></script>
   <script type="text/javascript" src="/js/tinycon.js"></script>
   <script type="text/javascript" src="/js/azucat.js"></script>
-  <script type="text/javascript"> Azucat.start(<%= @ws_port %>); </script>
+  <script type="text/javascript">
+    Azucat.start(<%= @ws_port %>, {
+      audio: <%= !!@audio.to_s %>,
+      audioFile: "<%= @audio_path %>"
+    });
+  </script>
 </head>
 <body>
   <header>

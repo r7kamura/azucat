@@ -16,7 +16,7 @@ describe Azucat::Command do
   end
 
   describe "commands" do
-    describe ">" do
+    describe "ruby" do
       it "eval input" do
         @self.should_receive(:eval)
         @self.input("ruby true")

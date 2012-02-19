@@ -11,8 +11,9 @@ var Azucat = {
 
   start: function(port, opts) {
     opts = $.extend({
-      audio:   true,
-      counter: true
+      counter:   true,
+      audio:     true,
+      audioPath: "/sounds/on-message.wav"
     }, opts);
 
     var self = this;
@@ -23,7 +24,7 @@ var Azucat = {
       self.setupAjaxForm();
       self.focusFirstForm();
       opts.counter && self.setupUnreadCounter();
-      opts.audio   && self.setupAudio();
+      opts.audio   && self.setupAudio(opts.audioPath);
     });
   },
 
@@ -101,9 +102,9 @@ var Azucat = {
     return str.replace(/<.*?>/g, '');
   },
 
-  setupAudio: function() {
+  setupAudio: function(audioPath) {
     var self = this;
-    this.setupAudioQueue({ size: 3, path: "/sounds/on-message.mp3" });
+    this.setupAudioQueue({ size: 5, path: audioPath });
     this.onMessage.push(function() {
       self.rotateAudioQueue(function(audio) { audio.play() });
     });

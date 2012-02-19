@@ -4,24 +4,7 @@ module Azucat
   module Twitter
     extend self
 
-    Azucat.init do
-      next unless Azucat.config.twitter
-
-      begin
-        setup_config
-        setup_client_and_info
-      rescue SocketError, Errno::ECONNREFUSED
-        Azucat.config.twitter = false
-        next
-      end
-
-      Notify.register(?@ + @info["screen_name"])
-      Command.register(:t,     "tweet <param>")       { |m| tweet(m[1]) }
-      Command.register(:tweet, "tweet <param>")       { |m| tweet(m[1]) }
-      Command.register(:'!',   "tweet ＼<param>！／") { |m|
-        tweet "＼#{m[1]}！／"
-      }
-    end
+    attr_reader :info
 
     def start_stream
       stream = ::Twitter::JSONStream.connect(@config)
@@ -41,6 +24,13 @@ module Azucat
       @client.home_timeline.reverse_each do |tweet|
         Output.puts parse_tweet(tweet)
       end
+    end
+
+    def setup
+      setup_config
+      setup_client_and_info
+    rescue SocketError, Errno::ECONNREFUSED
+      Azucat.config.twitter = false
     end
 
     private
@@ -134,5 +124,18 @@ module Azucat
     next unless config.twitter
     Twitter.recent
     Twitter.start_stream
+  end
+
+  init do
+    next unless config.twitter
+    Twitter.setup
+    next unless config.twitter
+
+    Notify.register(?@ + Twitter.info["screen_name"])
+    Command.register(:t,     "tweet <param>")       { |m| Twitter.tweet(m[1]) }
+    Command.register(:tweet, "tweet <param>")       { |m| Twitter.tweet(m[1]) }
+    Command.register(:'!',   "tweet ＼<param>！／") { |m|
+      Twitter.tweet "＼#{m[1]}！／"
+    }
   end
 end
