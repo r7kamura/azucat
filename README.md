@@ -1,4 +1,8 @@
 # Azucat
+
+> [!NOTE]
+> This project is archived because I no longer actively use it, and there seems to be no recent activity from other users either. If you are still using it and would like to take over maintenance, please contact me somewhere.
+
 * Twitter / IRC / Skype 用のクライアントです
 * 標準入力を受け取ってブラウザに出力する便利機能もあります
 * WebSocketが動作するブラウザ + Ruby 1.8.7以上で動作します
